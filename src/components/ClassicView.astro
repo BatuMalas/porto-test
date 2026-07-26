@@ -1,0 +1,683 @@
+---
+// ClassicView.astro — Classic Resume / CV Mode
+import { owner, projects, skills, socials, experiences, educations } from "../data/portfolio";
+
+const categoryColor: Record<string, string> = {
+  web:    "#7C3AED",
+  mobile: "#BE185D",
+  game:   "#DC2626",
+  ai:     "#D97706",
+  tool:   "#0284C7",
+};
+
+const skillCategoryIcon: Record<string, string> = {
+  language: "⌨️",
+  frontend: "🎨",
+  backend:  "⚙️",
+  devops:   "🚀",
+  design:   "✏️",
+};
+
+const skillCategoryLabel: Record<string, string> = {
+  language: "Languages",
+  frontend: "Frontend",
+  backend:  "Backend",
+  devops:   "DevOps",
+  design:   "Design",
+};
+
+// Only show Frontend, Backend, and a merged Tools group for the CV layout
+const frontendSkills = skills.filter(s => s.category === "frontend" || s.category === "language");
+const backendSkills  = skills.filter(s => s.category === "backend");
+const toolSkills     = skills.filter(s => s.category === "devops" || s.category === "design");
+---
+
+<div
+  id="classic-view"
+  class="fixed inset-0 overflow-y-auto"
+  style="
+    display: none;
+    top: 52px;
+    background: var(--c-bg);
+    font-family: var(--font-sans);
+    color: var(--c-text);
+  "
+>
+  <div class="max-w-4xl mx-auto px-6 py-12 pb-28">
+
+    <!-- ══ HERO ════════════════════════════════════════════════════ -->
+    <section id="cv-hero" class="mb-16 text-center">
+
+      <!-- Avatar ring -->
+      <div class="relative w-28 h-28 mx-auto mb-6">
+        <div
+          class="avatar-ring w-28 h-28 rounded-full flex items-center justify-center text-5xl"
+          style="
+            background: linear-gradient(135deg, var(--c-accent), var(--c-accent2));
+            box-shadow: 0 0 0 4px var(--c-bg), 0 0 0 6px var(--c-accent);
+          "
+        >
+          👨‍💻
+        </div>
+        <!-- Online indicator -->
+        <span
+          class="absolute bottom-1 right-1 w-5 h-5 rounded-full border-2 flex items-center justify-center text-xs font-bold"
+          style="
+            background: #22c55e;
+            border-color: var(--c-bg);
+            color: white;
+            font-size: 9px;
+          "
+          title="Available for hire"
+        >✓</span>
+      </div>
+
+      <h1
+        class="text-4xl md:text-5xl font-bold mb-3 leading-tight"
+        style="color: var(--c-text);"
+      >
+        {owner.name}
+      </h1>
+
+      <p class="text-base font-medium mb-5" style="color: var(--c-accent);">
+        {owner.title}
+      </p>
+
+      <p class="max-w-lg mx-auto text-sm leading-relaxed mb-7" style="color: var(--c-muted);">
+        {owner.bio}
+      </p>
+
+      <!-- Contact chips -->
+      <div class="flex flex-wrap items-center justify-center gap-3 text-xs">
+        <span
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
+          style="background: var(--c-surface); color: var(--c-muted); border: 1px solid var(--c-border);"
+        >
+          📍 {owner.location}
+        </span>
+        <a
+          href={`mailto:${owner.email}`}
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full no-underline transition-opacity hover:opacity-80"
+          style="background: var(--c-surface); color: var(--c-muted); border: 1px solid var(--c-border);"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          {owner.email}
+        </a>
+        <span
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
+          style="background: var(--c-surface); color: var(--c-muted); border: 1px solid var(--c-border);"
+        >
+          🌐 {owner.website}
+        </span>
+      </div>
+    </section>
+
+    <!-- ══ SUMMARY ════════════════════════════════════════════════ -->
+    <section id="cv-summary" class="mb-16">
+
+      <!-- Section label -->
+      <div class="flex items-center gap-3 mb-6">
+        <span
+          class="text-xs font-bold px-2.5 py-1 rounded font-mono tracking-widest"
+          style="
+            background: var(--c-accent);
+            color: #fff;
+            font-family: var(--font-mono);
+          "
+        >01 SUMMARY</span>
+        <div class="flex-1 h-px" style="background: var(--c-border);"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <!-- Summary text -->
+        <div
+          class="md:col-span-2 rounded-xl p-6"
+          style="
+            background: var(--c-surface);
+            border: 1px solid var(--c-border);
+          "
+        >
+          <p class="text-sm leading-7" style="color: var(--c-muted);">
+            {owner.summary}
+          </p>
+        </div>
+
+        <!-- Years of experience card -->
+        <div
+          class="rounded-xl p-6 flex flex-col items-center justify-center text-center"
+          style="
+            background: var(--c-surface);
+            border: 1px solid var(--c-border);
+          "
+        >
+          <span
+            class="years-gradient text-6xl font-bold leading-none mb-1"
+            style="
+              background: linear-gradient(135deg, var(--c-accent), var(--c-accent2));
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+            "
+          >
+            {owner.yearsOfExperience}+
+          </span>
+          <span class="text-xs tracking-widest uppercase font-semibold mb-4" style="color: var(--c-muted);">
+            Years of Experience
+          </span>
+          <!-- mini progress bar -->
+          <div class="w-full h-1.5 rounded-full overflow-hidden" style="background: var(--c-border);">
+            <div
+              class="earthbound-bar h-full rounded-full"
+              style={`width: ${Math.min((owner.yearsOfExperience / 10) * 100, 100)}%; background: linear-gradient(90deg, var(--c-accent), var(--c-accent2));`}
+            ></div>
+          </div>
+          <div class="flex justify-between w-full mt-1">
+            <span class="text-xs" style="color: var(--c-muted);">JR</span>
+            <span class="text-xs" style="color: var(--c-muted);">SR</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SKILLS & TECHNOLOGIES ══════════════════════════════════ -->
+    <section id="cv-skills" class="mb-16">
+
+      <div class="flex items-center gap-3 mb-6">
+        <span
+          class="text-xs font-bold px-2.5 py-1 rounded font-mono tracking-widest"
+          style="background: var(--c-accent); color: #fff; font-family: var(--font-mono);"
+        >02 SKILLS &amp; TECHNOLOGIES</span>
+        <div class="flex-1 h-px" style="background: var(--c-border);"></div>
+      </div>
+
+      <div
+        class="rounded-xl p-6"
+        style="
+          background: var(--c-surface);
+          border: 1px solid var(--c-border);
+        "
+      >
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+
+          <!-- Frontend -->
+          <div>
+            <h3 class="text-sm font-semibold mb-4 flex items-center gap-2" style="color: var(--c-text);">
+              <span>🎨</span> Frontend
+            </h3>
+            <div class="flex flex-wrap gap-1.5">
+              {frontendSkills.map(skill => (
+                <span
+                  class="text-xs px-2.5 py-1 rounded-full font-medium"
+                  style="
+                    background: var(--c-border);
+                    color: var(--c-muted);
+                    border: 1px solid var(--c-border);
+                    font-family: var(--font-mono);
+                  "
+                >
+                  {skill.name}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <!-- Backend -->
+          <div>
+            <h3 class="text-sm font-semibold mb-4 flex items-center gap-2" style="color: var(--c-text);">
+              <span>⚙️</span> Backend
+            </h3>
+            <div class="flex flex-wrap gap-1.5">
+              {backendSkills.map(skill => (
+                <span
+                  class="text-xs px-2.5 py-1 rounded-full font-medium"
+                  style="
+                    background: var(--c-border);
+                    color: var(--c-muted);
+                    border: 1px solid var(--c-border);
+                    font-family: var(--font-mono);
+                  "
+                >
+                  {skill.name}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <!-- Tools -->
+          <div>
+            <h3 class="text-sm font-semibold mb-4 flex items-center gap-2" style="color: var(--c-text);">
+              <span>🛠️</span> Tools
+            </h3>
+            <div class="flex flex-wrap gap-1.5">
+              {toolSkills.map(skill => (
+                <span
+                  class="text-xs px-2.5 py-1 rounded-full font-medium"
+                  style="
+                    background: var(--c-border);
+                    color: var(--c-muted);
+                    border: 1px solid var(--c-border);
+                    font-family: var(--font-mono);
+                  "
+                >
+                  {skill.name}
+                </span>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ EXPERIENCE ══════════════════════════════════════════════ -->
+    <section id="cv-experience" class="mb-16">
+
+      <div class="flex items-center gap-3 mb-6">
+        <span
+          class="text-xs font-bold px-2.5 py-1 rounded font-mono tracking-widest"
+          style="background: var(--c-accent); color: #fff; font-family: var(--font-mono);"
+        >03 EXPERIENCE</span>
+        <div class="flex-1 h-px" style="background: var(--c-border);"></div>
+      </div>
+
+      <div class="flex flex-col gap-5">
+        {experiences.map((exp) => (
+          <div
+            class="rounded-xl p-6 relative"
+            style="
+              background: var(--c-surface);
+              border: 1px solid var(--c-border);
+              border-left: 3px solid var(--c-accent);
+            "
+          >
+            <!-- Role + period -->
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+              <div>
+                <h3 class="text-base font-bold" style="color: var(--c-text);">{exp.role}</h3>
+                <p class="text-sm" style="color: var(--c-muted);">{exp.company}</p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                {exp.current && (
+                  <span
+                    class="current-badge text-xs px-2 py-0.5 rounded-full font-semibold"
+                    style="background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3);"
+                  >
+                    CURRENT
+                  </span>
+                )}
+                <span
+                  class="text-xs px-2.5 py-1 rounded-full"
+                  style="background: var(--c-border); color: var(--c-muted); font-family: var(--font-mono);"
+                >
+                  {exp.period}
+                </span>
+              </div>
+            </div>
+
+            <!-- Achievements -->
+            <ul class="flex flex-col gap-2">
+              {exp.achievements.map(item => (
+                <li class="text-sm flex items-start gap-2.5" style="color: var(--c-muted);">
+                  <span class="mt-1 w-1.5 h-1.5 rounded-full shrink-0" style="background: var(--c-accent);"></span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ══ FEATURED PROJECTS ════════════════════════════════════════ -->
+    <section id="cv-projects" class="mb-16">
+
+      <div class="flex items-center gap-3 mb-2">
+        <span
+          class="text-xs font-bold px-2.5 py-1 rounded font-mono tracking-widest"
+          style="background: var(--c-accent); color: #fff; font-family: var(--font-mono);"
+        >04 FEATURED PROJECTS</span>
+        <div class="flex-1 h-px" style="background: var(--c-border);"></div>
+        <span class="text-xs shrink-0" style="color: var(--c-muted); font-family: var(--font-mono);">
+          {projects.length} projects built
+        </span>
+      </div>
+      <p class="text-xs mb-6" style="color: var(--c-muted);">Click a card to see full details</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {projects.map((project) => (
+          <article
+            class="project-card group rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            id={`project-card-${project.id}`}
+            data-project-id={project.id}
+            style={`
+              background: var(--c-surface);
+              border: 1px solid var(--c-border);
+              border-top: 3px solid ${project.color};
+            `}
+          >
+            <!-- Color banner -->
+            <div
+              class="h-28 flex items-center justify-center text-5xl"
+              style={`background: ${project.color}18;`}
+            >
+              {project.icon}
+            </div>
+
+            <div class="p-5">
+              <!-- Top: title + category -->
+              <div class="flex items-start justify-between gap-2 mb-2">
+                <h3 class="font-bold text-base leading-tight" style="color: var(--c-text);">
+                  {project.title}
+                </h3>
+                <span
+                  class="text-xs px-2 py-0.5 rounded-full shrink-0"
+                  style={`
+                    background: ${categoryColor[project.category]}18;
+                    color: ${categoryColor[project.category]};
+                    border: 1px solid ${categoryColor[project.category]}33;
+                    font-family: var(--font-mono);
+                  `}
+                >
+                  {project.category}
+                </span>
+              </div>
+
+              <p class="text-xs leading-relaxed mb-4" style="color: var(--c-muted);">
+                {project.description}
+              </p>
+
+              <!-- Tech stack -->
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                {project.techStack.map((tech) => (
+                  <span
+                    class="text-xs px-2 py-0.5 rounded"
+                    style="
+                      background: var(--c-border);
+                      color: var(--c-muted);
+                      font-family: var(--font-mono);
+                    "
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              <!-- Links -->
+              <div class="flex gap-3 pt-3" style="border-top: 1px solid var(--c-border);">
+                {project.github && (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-xs flex items-center gap-1.5 transition-opacity hover:opacity-100"
+                    style="color: var(--c-muted); opacity: 0.75; text-decoration: none;"
+                    onclick="event.stopPropagation()"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                    Src. Code
+                  </a>
+                )}
+                {project.live && (
+                  <a
+                    href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-xs flex items-center gap-1.5 transition-opacity hover:opacity-100"
+                    style="color: var(--c-accent); opacity: 0.85; text-decoration: none;"
+                    onclick="event.stopPropagation()"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                      <polyline points="15 3 21 3 21 9"/>
+                      <line x1="10" y1="14" x2="21" y2="3"/>
+                    </svg>
+                    Live Prev.
+                  </a>
+                )}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- ══ EDUCATION ═══════════════════════════════════════════════ -->
+    <section id="cv-education" class="mb-16">
+
+      <div class="flex items-center gap-3 mb-6">
+        <span
+          class="text-xs font-bold px-2.5 py-1 rounded font-mono tracking-widest"
+          style="background: var(--c-accent); color: #fff; font-family: var(--font-mono);"
+        >05 EDUCATION</span>
+        <div class="flex-1 h-px" style="background: var(--c-border);"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        {educations.map((edu) => (
+          <div
+            class="rounded-xl p-6"
+            style="
+              background: var(--c-surface);
+              border: 1px solid var(--c-border);
+            "
+          >
+            <h3 class="font-bold text-base mb-1" style="color: var(--c-text);">{edu.degree}</h3>
+            <p class="text-xs mb-3 font-medium" style="color: var(--c-accent);">{edu.institution}</p>
+            <p class="text-sm leading-relaxed" style="color: var(--c-muted);">{edu.description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ══ CONTACT / FOOTER ════════════════════════════════════════ -->
+    <section id="cv-contact">
+
+      <div
+        class="rounded-2xl p-8 text-center"
+        style="
+          background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(6,182,212,0.08));
+          border: 1px solid rgba(124,58,237,0.2);
+        "
+      >
+        <p class="text-sm font-medium mb-1" style="color: var(--c-text);">Ready to collaborate?</p>
+        <p class="text-xs mb-6" style="color: var(--c-muted);">
+          Saya selalu terbuka untuk diskusi proyek baru, peluang freelance, atau sekadar ngobrol soal teknologi.
+        </p>
+
+        <a
+          href={`mailto:${owner.email}`}
+          id="contact-email-link"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-105"
+          style="
+            background: linear-gradient(135deg, var(--c-accent), #9f67ff);
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(124,58,237,0.3);
+          "
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          {owner.email}
+        </a>
+
+        <div class="flex justify-center gap-3 mt-5">
+          {socials.map((s) => (
+            <a
+              href={s.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              id={`contact-social-${s.icon}`}
+              class="text-xs px-4 py-2 rounded-full transition-all duration-200 hover:scale-105"
+              style="
+                background: var(--c-surface);
+                color: var(--c-text);
+                text-decoration: none;
+                border: 1px solid var(--c-border);
+              "
+            >
+              {s.platform}
+            </a>
+          ))}
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- Footer bar -->
+  <footer
+    class="text-center py-5 text-xs"
+    style="
+      color: var(--c-muted);
+      border-top: 1px solid var(--c-border);
+      font-family: var(--font-mono);
+    "
+  >
+    © 2024 {owner.name}. Built with Cozy Precision.
+    <span class="mx-2 opacity-40">·</span>
+    <a href="#" class="hover:underline" style="color: var(--c-accent);">Resume</a>
+  </footer>
+</div>
+
+<script>
+  // Project card click → open modal
+  import { projects } from "../data/portfolio";
+
+  document.querySelectorAll(".project-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      const id = (card as HTMLElement).dataset.projectId;
+      const project = projects.find((p) => p.id === id);
+      if (project) {
+        document.dispatchEvent(
+          new CustomEvent("openProjectModal", { detail: project })
+        );
+      }
+    });
+  });
+</script>
+
+<style>
+  /* ─────────────────────────────────────────────────────────────
+     EARTHBOUND HEARTH — colour palette scoped to Classic View
+     Primary  : #8DA399  sage green
+     Secondary: #7D5C4A  warm brown
+     Tertiary : #EBCB8B  sandy gold
+     Neutral  : #FDF8E3  warm cream
+  ──────────────────────────────────────────────────────────────── */
+  #classic-view {
+    --c-bg:       #FDF8E3;
+    --c-surface:  #F0E6CC;
+    --c-border:   rgba(141, 163, 153, 0.28);
+    --c-text:     #2C3328;
+    --c-muted:    #7D5C4A;
+    --c-accent:   #8DA399;
+    --c-accent2:  #EBCB8B;
+    --font-sans:  'Plus Jakarta Sans', 'Space Grotesk', system-ui, sans-serif;
+    background:   #FDF8E3;
+    color:        #2C3328;
+    font-family:  'Plus Jakarta Sans', 'Space Grotesk', system-ui, sans-serif;
+    scrollbar-color: #8DA399 #F0E6CC;
+  }
+
+  #classic-view::-webkit-scrollbar-track { background: #F0E6CC; }
+  #classic-view::-webkit-scrollbar-thumb { background: #8DA399; border-radius: 3px; }
+
+  /* Avatar ring glow */
+  #classic-view .avatar-ring {
+    box-shadow: 0 0 0 4px #FDF8E3, 0 0 0 6px #8DA399 !important;
+    background: linear-gradient(135deg, #8DA399, #7D5C4A) !important;
+  }
+
+  /* Section number badges */
+  #classic-view [class*="cv-badge"],
+  #classic-view span[style*="background: var(--c-accent)"] {
+    background: #8DA399 !important;
+    color: #fff !important;
+  }
+
+  /* Divider lines */
+  #classic-view div[style*="background: var(--c-border)"] {
+    background: rgba(141, 163, 153, 0.3) !important;
+  }
+
+  /* Years gradient text */
+  #classic-view .years-gradient {
+    background: linear-gradient(135deg, #8DA399, #7D5C4A);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Progress bar */
+  #classic-view .earthbound-bar {
+    background: linear-gradient(90deg, #8DA399, #EBCB8B) !important;
+  }
+
+  /* Experience left border */
+  #classic-view #cv-experience article {
+    border-left-color: #8DA399 !important;
+  }
+
+  /* Accent bullet dots */
+  #classic-view span[style*="background: var(--c-accent)"] {
+    background: #8DA399 !important;
+  }
+
+  /* CURRENT badge */
+  #classic-view .current-badge {
+    background: rgba(141, 163, 153, 0.2) !important;
+    color: #5C8070 !important;
+    border-color: rgba(141, 163, 153, 0.4) !important;
+  }
+
+  /* Contact CTA gradient */
+  #classic-view #cv-contact > div {
+    background: linear-gradient(135deg, rgba(141,163,153,0.14), rgba(235,203,139,0.10)) !important;
+    border-color: rgba(141, 163, 153, 0.3) !important;
+  }
+
+  /* Email button */
+  #classic-view #contact-email-link {
+    background: linear-gradient(135deg, #8DA399, #7D5C4A) !important;
+    box-shadow: 0 4px 20px rgba(141, 163, 153, 0.3) !important;
+  }
+
+  /* Social pills */
+  #classic-view a[id^="contact-social-"] {
+    background: #F0E6CC !important;
+    border-color: rgba(141, 163, 153, 0.35) !important;
+    color: #2C3328 !important;
+  }
+  #classic-view a[id^="contact-social-"]:hover {
+    background: rgba(141, 163, 153, 0.25) !important;
+  }
+
+  /* Resume link in footer */
+  #classic-view footer a {
+    color: #8DA399 !important;
+  }
+
+  /* Footer bar */
+  #classic-view footer {
+    background: #F0E6CC !important;
+    border-top-color: rgba(141, 163, 153, 0.25) !important;
+  }
+
+  /* Project card hover */
+  #classic-view .project-card:hover {
+    box-shadow: 0 10px 30px rgba(141, 163, 153, 0.2) !important;
+  }
+
+  /* Skill tag hover */
+  #classic-view span[style*="var(--c-border)"]:hover {
+    background: rgba(141, 163, 153, 0.2) !important;
+  }
+</style>

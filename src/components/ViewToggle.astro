@@ -1,0 +1,102 @@
+---
+// ViewToggle.astro — Toggle button antara Farm Mode & Classic Mode
+---
+
+<div
+  id="view-toggle"
+  class="fixed bottom-6 right-6 z-50 flex items-center gap-1 p-1 rounded-full"
+  style="
+    background: rgba(26,26,46,0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  "
+>
+  <!-- Farm Mode Button -->
+  <button
+    id="btn-farm"
+    aria-label="Switch to Farm Mode"
+    class="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer"
+    style="
+      background: linear-gradient(135deg, var(--c-accent), #9f67ff);
+      color: white;
+      font-family: var(--font-sans);
+    "
+  >
+    <span>🌾</span>
+    <span class="hidden sm:inline">Farm</span>
+  </button>
+
+  <!-- Classic Mode Button -->
+  <button
+    id="btn-classic"
+    aria-label="Switch to Classic Resume Mode"
+    class="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer"
+    style="
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      font-family: var(--font-sans);
+    "
+  >
+    <span>📄</span>
+    <span class="hidden sm:inline">CV</span>
+  </button>
+</div>
+
+<script>
+  const btnFarm = document.getElementById("btn-farm")!;
+  const btnClassic = document.getElementById("btn-classic")!;
+  const farmView = document.getElementById("farm-view")!;
+  const classicView = document.getElementById("classic-view")!;
+
+  const ACTIVE_STYLE = "linear-gradient(135deg, var(--c-accent), #9f67ff)";
+  const INACTIVE_BG = "transparent";
+  const INACTIVE_COLOR = "rgba(255,255,255,0.5)";
+
+  function setFarmActive(): void {
+    btnFarm.style.background = ACTIVE_STYLE;
+    btnFarm.style.color = "white";
+    btnClassic.style.background = INACTIVE_BG;
+    btnClassic.style.color = INACTIVE_COLOR;
+
+    farmView.style.opacity = "0";
+    farmView.style.display = "block";
+    requestAnimationFrame(() => {
+      farmView.style.transition = "opacity 0.4s ease";
+      farmView.style.opacity = "1";
+    });
+
+    classicView.style.opacity = "0";
+    setTimeout(() => { classicView.style.display = "none"; }, 400);
+
+    localStorage.setItem("portfolioView", "farm");
+  }
+
+  function setClassicActive(): void {
+    btnClassic.style.background = ACTIVE_STYLE;
+    btnClassic.style.color = "white";
+    btnFarm.style.background = INACTIVE_BG;
+    btnFarm.style.color = INACTIVE_COLOR;
+
+    classicView.style.display = "block";
+    classicView.style.opacity = "0";
+    requestAnimationFrame(() => {
+      classicView.style.transition = "opacity 0.4s ease";
+      classicView.style.opacity = "1";
+    });
+
+    farmView.style.opacity = "0";
+    setTimeout(() => { farmView.style.display = "none"; }, 400);
+
+    localStorage.setItem("portfolioView", "classic");
+  }
+
+  btnFarm.addEventListener("click", setFarmActive);
+  btnClassic.addEventListener("click", setClassicActive);
+
+  // Restore saved preference
+  const savedView = localStorage.getItem("portfolioView");
+  if (savedView === "classic") {
+    setClassicActive();
+  }
+</script>

@@ -1,0 +1,109 @@
+---
+// index.astro — Halaman utama portofolio dengan dual view
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navbar from "../components/Navbar.astro";
+import FarmCanvas from "../components/FarmCanvas.astro";
+import ClassicView from "../components/ClassicView.astro";
+import ProjectModal from "../components/ProjectModal.astro";
+import ViewToggle from "../components/ViewToggle.astro";
+---
+
+<BaseLayout
+  title="Candra Bagus — Full-Stack Developer & Creative Coder"
+  description="Portofolio interaktif Candra Bagus. Full-Stack Developer yang membangun antarmuka hidup dan sistem solid. Jelajahi proyek di pixel farm atau baca CV klasik."
+>
+  <!-- Fixed Navbar -->
+  <Navbar />
+
+  <!-- Farm Mode (default) -->
+  <FarmCanvas />
+
+  <!-- Classic Resume Mode (hidden by default) -->
+  <ClassicView />
+
+  <!-- Project Modal (shared antara kedua mode) -->
+  <ProjectModal />
+
+  <!-- Toggle button -->
+  <ViewToggle />
+
+  <!-- Loading overlay saat PixiJS init -->
+  <div
+    id="loading-overlay"
+    class="fixed inset-0 z-[200] flex flex-col items-center justify-center"
+    style="
+      background: #0d0d1a;
+      transition: opacity 0.6s ease;
+    "
+  >
+    <div class="mb-6 relative">
+      <div
+        id="pixel-spinner"
+        style="
+          width: 48px;
+          height: 48px;
+          background: linear-gradient(135deg, #7C3AED, #06b6d4);
+          border-radius: 8px;
+          animation: pixelSpin 1.2s steps(4) infinite;
+        "
+      ></div>
+    </div>
+    <p
+      class="text-sm"
+      style="
+        font-family: var(--font-mono);
+        color: rgba(255,255,255,0.4);
+        letter-spacing: 0.1em;
+      "
+    >
+      <span id="loading-text">Menanam benih...</span>
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  @keyframes pixelSpin {
+    0%   { transform: rotate(0deg) scale(1); }
+    25%  { transform: rotate(90deg) scale(1.1); }
+    50%  { transform: rotate(180deg) scale(1); }
+    75%  { transform: rotate(270deg) scale(0.9); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+</style>
+
+<script>
+  const loadingTexts = [
+    "Menanam benih...",
+    "Menyiram kebun...",
+    "Menumbuhkan proyek...",
+    "Membuka gerbang farm...",
+  ];
+
+  let textIdx = 0;
+  const loadingText = document.getElementById("loading-text")!;
+  const textInterval = setInterval(() => {
+    textIdx = (textIdx + 1) % loadingTexts.length;
+    loadingText.textContent = loadingTexts[textIdx];
+  }, 600);
+
+  function hideLoading(): void {
+    clearInterval(textInterval);
+    const overlay = document.getElementById("loading-overlay")!;
+    overlay.style.opacity = "0";
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 600);
+  }
+
+  const loadTimeout = setTimeout(hideLoading, 4000);
+
+  document.addEventListener("farmReady", () => {
+    clearTimeout(loadTimeout);
+    hideLoading();
+  });
+
+  const savedView = localStorage.getItem("portfolioView");
+  if (savedView === "classic") {
+    setTimeout(hideLoading, 300);
+  }
+</script>

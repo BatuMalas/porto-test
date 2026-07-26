@@ -1,0 +1,230 @@
+---
+// ProjectModal.astro — Pop-up glassmorphism saat klik proyek di farm
+---
+
+<!-- Modal Overlay -->
+<div
+  id="project-modal"
+  class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+  style="
+    background: rgba(0,0,0,0);
+    backdrop-filter: blur(0px);
+    pointer-events: none;
+    transition: background 0.3s ease, backdrop-filter 0.3s ease;
+  "
+>
+  <!-- Modal Card -->
+  <div
+    id="modal-card"
+    class="relative w-full max-w-lg rounded-2xl overflow-hidden"
+    style="
+      background: rgba(26,26,46,0.92);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,58,237,0.2);
+      transform: scale(0.9) translateY(20px);
+      opacity: 0;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+    "
+  >
+    <!-- Header gradient strip -->
+    <div
+      id="modal-header-strip"
+      class="h-1.5 w-full"
+      style="background: linear-gradient(90deg, var(--c-accent), var(--c-accent2));"
+    ></div>
+
+    <!-- Content -->
+    <div class="p-6">
+      <!-- Top row: icon + title + close -->
+      <div class="flex items-start justify-between gap-4 mb-4">
+        <div class="flex items-center gap-3">
+          <div
+            id="modal-icon"
+            class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+            style="background: rgba(124,58,237,0.2);"
+          >
+            🌾
+          </div>
+          <div>
+            <h2
+              id="modal-title"
+              class="text-xl font-bold leading-tight"
+              style="font-family: var(--font-sans);"
+            >
+              Project Title
+            </h2>
+            <p
+              id="modal-short-desc"
+              class="text-sm mt-0.5"
+              style="color: var(--c-muted); font-family: var(--font-sans);"
+            >
+              Short description
+            </p>
+          </div>
+        </div>
+
+        <button
+          id="modal-close"
+          aria-label="Tutup modal"
+          class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 cursor-pointer"
+          style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6);"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Long description -->
+      <p
+        id="modal-long-desc"
+        class="text-sm leading-relaxed mb-5"
+        style="color: rgba(226,232,240,0.8); font-family: var(--font-sans);"
+      >
+        Long description here.
+      </p>
+
+      <!-- Tech stack badges -->
+      <div id="modal-tech" class="flex flex-wrap gap-2 mb-6">
+        <!-- Badges akan di-inject via JS -->
+      </div>
+
+      <!-- Action buttons -->
+      <div class="flex items-center gap-3">
+        <a
+          id="modal-github"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105"
+          style="
+            background: rgba(255,255,255,0.08);
+            color: var(--c-text);
+            border: 1px solid rgba(255,255,255,0.1);
+            font-family: var(--font-sans);
+            text-decoration: none;
+          "
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+
+        <a
+          id="modal-live"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105"
+          style="
+            background: linear-gradient(135deg, var(--c-accent), #9f67ff);
+            color: white;
+            font-family: var(--font-sans);
+            text-decoration: none;
+          "
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+          Live Demo
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import type { Project } from "../data/portfolio";
+
+  const overlay = document.getElementById("project-modal")!;
+  const card = document.getElementById("modal-card")!;
+  const closeBtn = document.getElementById("modal-close")!;
+
+  function openModal(project: Project): void {
+    // Populate content
+    (document.getElementById("modal-icon")!).textContent = project.icon;
+    (document.getElementById("modal-title")!).textContent = project.title;
+    (document.getElementById("modal-short-desc")!).textContent = project.description;
+    (document.getElementById("modal-long-desc")!).textContent = project.longDescription;
+
+    // Header strip color
+    const colorHex = project.color;
+    (document.getElementById("modal-header-strip")!).style.background =
+      `linear-gradient(90deg, ${colorHex}, #9f67ff)`;
+
+    // Icon background
+    (document.getElementById("modal-icon")!).style.background =
+      `${colorHex}33`;
+
+    // Tech badges
+    const techContainer = document.getElementById("modal-tech")!;
+    techContainer.innerHTML = project.techStack
+      .map(
+        (tech) => `
+        <span style="
+          display: inline-block;
+          padding: 4px 10px;
+          border-radius: 9999px;
+          font-size: 11px;
+          font-family: var(--font-mono);
+          background: rgba(255,255,255,0.07);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: rgba(226,232,240,0.8);
+        ">${tech}</span>
+      `
+      )
+      .join("");
+
+    // GitHub link
+    const ghLink = document.getElementById("modal-github") as HTMLAnchorElement;
+    if (project.github) {
+      ghLink.href = project.github;
+      ghLink.style.display = "flex";
+    } else {
+      ghLink.style.display = "none";
+    }
+
+    // Live link
+    const liveLink = document.getElementById("modal-live") as HTMLAnchorElement;
+    if (project.live) {
+      liveLink.href = project.live;
+      liveLink.style.display = "flex";
+    } else {
+      liveLink.style.display = "none";
+    }
+
+    // Animate in
+    overlay.style.pointerEvents = "auto";
+    overlay.style.background = "rgba(0,0,0,0.65)";
+    overlay.style.backdropFilter = "blur(8px)";
+    card.style.transform = "scale(1) translateY(0)";
+    card.style.opacity = "1";
+  }
+
+  function closeModal(): void {
+    overlay.style.pointerEvents = "none";
+    overlay.style.background = "rgba(0,0,0,0)";
+    overlay.style.backdropFilter = "blur(0px)";
+    card.style.transform = "scale(0.9) translateY(20px)";
+    card.style.opacity = "0";
+  }
+
+  // Listen for open event dari FarmCanvas
+  document.addEventListener("openProjectModal", (e: Event) => {
+    const project = (e as CustomEvent<Project>).detail;
+    openModal(project);
+  });
+
+  closeBtn.addEventListener("click", closeModal);
+
+  // Klik backdrop untuk close
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) closeModal();
+  });
+
+  // ESC key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+  });
+</script>

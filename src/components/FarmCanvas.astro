@@ -1,0 +1,100 @@
+---
+// FarmCanvas.astro — Container PixiJS canvas (Farm Mode)
+---
+
+<div id="farm-view" class="farm-view-wrapper">
+  <!-- Hint overlay -->
+  <div
+    id="farm-hint"
+    class="absolute bottom-20 left-1/2 -translate-x-1/2 z-30
+           flex items-center gap-2 px-4 py-2 rounded-full text-xs"
+    style="
+      background: rgba(13,13,26,0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.6);
+      font-family: var(--font-mono);
+      pointer-events: none;
+    "
+  >
+    <span>🖱️</span>
+    <span>Drag untuk jelajahi • Klik bangunan untuk melihat proyek</span>
+  </div>
+
+  <!-- WebGL fallback -->
+  <div
+    id="webgl-fallback"
+    class="hidden absolute inset-0 flex flex-col items-center justify-center text-center px-6"
+    style="z-index: 20; background: var(--c-bg);"
+  >
+    <div class="text-4xl mb-4">🚫</div>
+    <h2 class="text-lg font-semibold mb-2" style="font-family: var(--font-sans);">
+      WebGL tidak tersedia
+    </h2>
+    <p class="text-sm" style="color: var(--c-muted);">
+      Browser kamu tidak mendukung WebGL. Silakan gunakan Classic View.
+    </p>
+  </div>
+
+  <!-- PixiJS Canvas -->
+  <canvas
+    id="farm-canvas"
+    class="block w-full h-full"
+    aria-label="Interactive pixel farm portfolio"
+  ></canvas>
+</div>
+
+<style>
+  .farm-view-wrapper {
+    position: fixed;
+    inset: 0;
+    top: 52px; /* tinggi navbar */
+    overflow: hidden;
+    background: #0d0d1a;
+  }
+</style>
+
+<script>
+  import { FarmApp } from "../pixi/FarmApp";
+  import type { Project } from "../data/portfolio";
+
+  const canvas = document.getElementById("farm-canvas") as HTMLCanvasElement;
+  const fallback = document.getElementById("webgl-fallback")!;
+  const hint = document.getElementById("farm-hint")!;
+
+  const farm = new FarmApp();
+
+  if (!farm.supportsWebGL()) {
+    canvas.style.display = "none";
+    fallback.classList.remove("hidden");
+    fallback.style.display = "flex";
+  } else {
+    farm
+      .init(canvas, (project: Project) => {
+        // Dispatch event ke ProjectModal
+        document.dispatchEvent(
+          new CustomEvent("openProjectModal", { detail: project })
+        );
+      })
+      .then(() => {
+        document.dispatchEvent(new CustomEvent("farmReady"));
+      })
+      .catch((err) => {
+        console.error("FarmApp init error:", err);
+        canvas.style.display = "none";
+        fallback.classList.remove("hidden");
+        fallback.style.display = "flex";
+        document.dispatchEvent(new CustomEvent("farmReady")); // still hide loading
+      });
+
+    // Sembunyikan hint setelah 5 detik
+    setTimeout(() => {
+      hint.style.transition = "opacity 1s ease";
+      hint.style.opacity = "0";
+      setTimeout(() => { hint.remove(); }, 1000);
+    }, 5000);
+  }
+
+  // Cleanup saat navigasi
+  document.addEventListener("astro:before-swap", () => farm.destroy());
+</script>
