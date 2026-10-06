@@ -33,7 +33,11 @@ Hasil build ada di folder `dist/` — siap di-deploy ke Netlify / Vercel / GitHu
 ```powershell
 npm run preview
 ```
+Untuk kedepannya, gunakan perintah berikut untuk mengelola dev server:
 
+Stop: npx astro dev stop
+Status: npx astro dev status
+Logs: npx astro dev logs
 ---
 
 ## 📁 Struktur Folder

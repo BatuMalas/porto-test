@@ -1,15 +1,28 @@
 @import "tailwindcss";
 
-/* ─── Custom Tailwind theme overrides ─── */
+/* ─── Custom Tailwind theme overrides (Tailwind v4: gunakan --font-{name}) ─── */
 @theme {
-  --font-family-pixel: 'Press Start 2P', monospace;
-  --font-family-sans: 'Space Grotesk', system-ui, sans-serif;
-  --font-family-mono: 'JetBrains Mono', monospace;
+  --font-pixel:  'Press Start 2P', monospace;
+  --font-sans:   'Geist Pixel', system-ui, sans-serif;
+  --font-mono:   'JetBrains Mono', monospace;
+  --font-header: 'Pixelify Sans', system-ui, sans-serif;
+  --font-body:   'Geist Pixel', system-ui, sans-serif;
 
   --color-accent:  #7C3AED;
   --color-accent2: #06b6d4;
   --color-surface: #1a1a2e;
   --color-bg:      #0d0d1a;
+}
+
+/* ─── Force pixel fonts ke semua elemen ─── */
+@layer base {
+  html, body, * {
+    font-family: 'Geist Pixel', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Pixelify Sans', system-ui, sans-serif;
+  }
 }
 
 /* ─── Global resets & scroll ─── */

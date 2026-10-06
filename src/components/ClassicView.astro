@@ -39,7 +39,7 @@ const toolSkills     = skills.filter(s => s.category === "devops" || s.category 
     display: none;
     top: 52px;
     background: var(--c-bg);
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     color: var(--c-text);
   "
 >
@@ -74,7 +74,7 @@ const toolSkills     = skills.filter(s => s.category === "devops" || s.category 
 
       <h1
         class="text-4xl md:text-5xl font-bold mb-3 leading-tight"
-        style="color: var(--c-text);"
+        style="color: var(--c-text); font-family: var(--font-header);"
       >
         {owner.name}
       </h1>
@@ -121,11 +121,11 @@ const toolSkills     = skills.filter(s => s.category === "devops" || s.category 
       <!-- Section label -->
       <div class="flex items-center gap-3 mb-6">
         <span
-          class="text-xs font-bold px-2.5 py-1 rounded font-mono tracking-widest"
+          class="text-xs font-bold px-2.5 py-1 rounded tracking-widest"
           style="
             background: var(--c-accent);
             color: #fff;
-            font-family: var(--font-mono);
+            font-family: var(--font-header);
           "
         >01 SUMMARY</span>
         <div class="flex-1 h-px" style="background: var(--c-border);"></div>
@@ -187,8 +187,8 @@ const toolSkills     = skills.filter(s => s.category === "devops" || s.category 
 
       <div class="flex items-center gap-3 mb-6">
         <span
-          class="text-xs font-bold px-2.5 py-1 rounded font-mono tracking-widest"
-          style="background: var(--c-accent); color: #fff; font-family: var(--font-mono);"
+          class="text-xs font-bold px-2.5 py-1 rounded tracking-widest"
+          style="background: var(--c-accent); color: #fff; font-family: var(--font-header);"
         >02 SKILLS &amp; TECHNOLOGIES</span>
         <div class="flex-1 h-px" style="background: var(--c-border);"></div>
       </div>
@@ -277,8 +277,8 @@ const toolSkills     = skills.filter(s => s.category === "devops" || s.category 
 
       <div class="flex items-center gap-3 mb-6">
         <span
-          class="text-xs font-bold px-2.5 py-1 rounded font-mono tracking-widest"
-          style="background: var(--c-accent); color: #fff; font-family: var(--font-mono);"
+          class="text-xs font-bold px-2.5 py-1 rounded tracking-widest"
+          style="background: var(--c-accent); color: #fff; font-family: var(--font-header);"
         >03 EXPERIENCE</span>
         <div class="flex-1 h-px" style="background: var(--c-border);"></div>
       </div>
@@ -336,8 +336,8 @@ const toolSkills     = skills.filter(s => s.category === "devops" || s.category 
 
       <div class="flex items-center gap-3 mb-2">
         <span
-          class="text-xs font-bold px-2.5 py-1 rounded font-mono tracking-widest"
-          style="background: var(--c-accent); color: #fff; font-family: var(--font-mono);"
+          class="text-xs font-bold px-2.5 py-1 rounded tracking-widest"
+          style="background: var(--c-accent); color: #fff; font-family: var(--font-header);"
         >04 FEATURED PROJECTS</span>
         <div class="flex-1 h-px" style="background: var(--c-border);"></div>
         <span class="text-xs shrink-0" style="color: var(--c-muted); font-family: var(--font-mono);">
@@ -451,8 +451,8 @@ const toolSkills     = skills.filter(s => s.category === "devops" || s.category 
 
       <div class="flex items-center gap-3 mb-6">
         <span
-          class="text-xs font-bold px-2.5 py-1 rounded font-mono tracking-widest"
-          style="background: var(--c-accent); color: #fff; font-family: var(--font-mono);"
+          class="text-xs font-bold px-2.5 py-1 rounded tracking-widest"
+          style="background: var(--c-accent); color: #fff; font-family: var(--font-header);"
         >05 EDUCATION</span>
         <div class="flex-1 h-px" style="background: var(--c-border);"></div>
       </div>
@@ -580,10 +580,10 @@ const toolSkills     = skills.filter(s => s.category === "devops" || s.category 
     --c-muted:    #7D5C4A;
     --c-accent:   #8DA399;
     --c-accent2:  #EBCB8B;
-    --font-sans:  'Plus Jakarta Sans', 'Space Grotesk', system-ui, sans-serif;
+    --font-sans:  'Geist Pixel', system-ui, sans-serif;
     background:   #FDF8E3;
     color:        #2C3328;
-    font-family:  'Plus Jakarta Sans', 'Space Grotesk', system-ui, sans-serif;
+    font-family:  'Geist Pixel', system-ui, sans-serif;
     scrollbar-color: #8DA399 #F0E6CC;
   }
 
