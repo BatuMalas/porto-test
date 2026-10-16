@@ -1,102 +1,150 @@
 ---
-// ViewToggle.astro — Toggle button antara Farm Mode & Classic Mode
+// ViewToggle.astro — Multi-mode toggle: Farm, Editorial Dossier, & Retro CV
 ---
 
 <div
   id="view-toggle"
   class="fixed bottom-6 right-6 z-50 flex items-center gap-1 p-1 rounded-full"
   style="
-    background: rgba(26,26,46,0.85);
+    background: rgba(18, 18, 28, 0.88);
     backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   "
 >
   <!-- Farm Mode Button -->
   <button
     id="btn-farm"
-    aria-label="Switch to Farm Mode"
-    class="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer"
+    aria-label="Switch to Pixel Farm Mode"
+    class="flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer"
     style="
       background: linear-gradient(135deg, var(--c-accent), #9f67ff);
       color: white;
-      font-family: var(--font-sans);
     "
   >
     <span>🌾</span>
     <span class="hidden sm:inline">Farm</span>
   </button>
 
-  <!-- Classic Mode Button -->
+  <!-- Editorial Dossier Mode Button (The new modern requested theme!) -->
   <button
-    id="btn-classic"
-    aria-label="Switch to Classic Resume Mode"
-    class="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer"
+    id="btn-editorial"
+    aria-label="Switch to Modern Editorial Dossier Mode"
+    class="flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer"
     style="
       background: transparent;
-      color: rgba(255,255,255,0.5);
-      font-family: var(--font-sans);
+      color: rgba(255, 255, 255, 0.6);
+    "
+  >
+    <span>✨</span>
+    <span class="hidden sm:inline">Dossier</span>
+  </button>
+
+  <!-- Retro Classic Mode Button -->
+  <button
+    id="btn-classic"
+    aria-label="Switch to Retro CV Mode"
+    class="flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer"
+    style="
+      background: transparent;
+      color: rgba(255, 255, 255, 0.6);
     "
   >
     <span>📄</span>
-    <span class="hidden sm:inline">CV</span>
+    <span class="hidden sm:inline">Retro</span>
   </button>
 </div>
 
 <script>
   const btnFarm = document.getElementById("btn-farm")!;
+  const btnEditorial = document.getElementById("btn-editorial")!;
   const btnClassic = document.getElementById("btn-classic")!;
+
   const farmView = document.getElementById("farm-view")!;
+  const editorialView = document.getElementById("editorial-view")!;
   const classicView = document.getElementById("classic-view")!;
 
-  const ACTIVE_STYLE = "linear-gradient(135deg, var(--c-accent), #9f67ff)";
+  const FARM_ACTIVE_BG = "linear-gradient(135deg, var(--c-accent), #9f67ff)";
+  const EDITORIAL_ACTIVE_BG = "linear-gradient(135deg, #2563EB, #1D4ED8)";
+  const CLASSIC_ACTIVE_BG = "linear-gradient(135deg, #8DA399, #7D5C4A)";
   const INACTIVE_BG = "transparent";
-  const INACTIVE_COLOR = "rgba(255,255,255,0.5)";
+  const INACTIVE_COLOR = "rgba(255,255,255,0.6)";
 
-  function setFarmActive(): void {
-    btnFarm.style.background = ACTIVE_STYLE;
-    btnFarm.style.color = "white";
+  function resetAllViews(): void {
+    btnFarm.style.background = INACTIVE_BG;
+    btnFarm.style.color = INACTIVE_COLOR;
+    btnEditorial.style.background = INACTIVE_BG;
+    btnEditorial.style.color = INACTIVE_COLOR;
     btnClassic.style.background = INACTIVE_BG;
     btnClassic.style.color = INACTIVE_COLOR;
 
-    farmView.style.opacity = "0";
-    farmView.style.display = "block";
-    requestAnimationFrame(() => {
-      farmView.style.transition = "opacity 0.4s ease";
-      farmView.style.opacity = "1";
-    });
+    document.body.classList.remove("theme-editorial");
+  }
 
-    classicView.style.opacity = "0";
-    setTimeout(() => { classicView.style.display = "none"; }, 400);
+  function fadeInView(el: HTMLElement): void {
+    el.style.display = "block";
+    el.style.opacity = "0";
+    requestAnimationFrame(() => {
+      el.style.transition = "opacity 0.35s ease";
+      el.style.opacity = "1";
+    });
+  }
+
+  function fadeOutView(el: HTMLElement): void {
+    el.style.opacity = "0";
+    setTimeout(() => {
+      el.style.display = "none";
+    }, 350);
+  }
+
+  function setFarmActive(): void {
+    resetAllViews();
+    btnFarm.style.background = FARM_ACTIVE_BG;
+    btnFarm.style.color = "white";
+
+    fadeInView(farmView);
+    if (editorialView) fadeOutView(editorialView);
+    if (classicView) fadeOutView(classicView);
 
     localStorage.setItem("portfolioView", "farm");
   }
 
+  function setEditorialActive(): void {
+    resetAllViews();
+    btnEditorial.style.background = EDITORIAL_ACTIVE_BG;
+    btnEditorial.style.color = "white";
+    document.body.classList.add("theme-editorial");
+
+    if (editorialView) fadeInView(editorialView);
+    fadeOutView(farmView);
+    if (classicView) fadeOutView(classicView);
+
+    localStorage.setItem("portfolioView", "editorial");
+  }
+
   function setClassicActive(): void {
-    btnClassic.style.background = ACTIVE_STYLE;
+    resetAllViews();
+    btnClassic.style.background = CLASSIC_ACTIVE_BG;
     btnClassic.style.color = "white";
-    btnFarm.style.background = INACTIVE_BG;
-    btnFarm.style.color = INACTIVE_COLOR;
 
-    classicView.style.display = "block";
-    classicView.style.opacity = "0";
-    requestAnimationFrame(() => {
-      classicView.style.transition = "opacity 0.4s ease";
-      classicView.style.opacity = "1";
-    });
-
-    farmView.style.opacity = "0";
-    setTimeout(() => { farmView.style.display = "none"; }, 400);
+    if (classicView) fadeInView(classicView);
+    fadeOutView(farmView);
+    if (editorialView) fadeOutView(editorialView);
 
     localStorage.setItem("portfolioView", "classic");
   }
 
   btnFarm.addEventListener("click", setFarmActive);
+  btnEditorial.addEventListener("click", setEditorialActive);
   btnClassic.addEventListener("click", setClassicActive);
 
   // Restore saved preference
   const savedView = localStorage.getItem("portfolioView");
-  if (savedView === "classic") {
+  if (savedView === "editorial") {
+    setEditorialActive();
+  } else if (savedView === "classic") {
     setClassicActive();
+  } else if (savedView === "farm") {
+    setFarmActive();
   }
 </script>

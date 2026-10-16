@@ -1,0 +1,806 @@
+---
+// EditorialView.astro — Modern Dossier / Creative Technologist Classic View
+import { owner, projects, skills, socials, experiences } from "../data/portfolio";
+
+const categoryPillStyle: Record<string, { bg: string; text: string; border: string }> = {
+  web:    { bg: "#EEF2FF", text: "#4F46E5", border: "#E0E7FF" },
+  mobile: { bg: "#FDF2F8", text: "#DB2777", border: "#FCE7F3" },
+  game:   { bg: "#FEF2F2", text: "#DC2626", border: "#FEE2E2" },
+  ai:     { bg: "#FFFBEB", text: "#D97706", border: "#FEF3C7" },
+  tool:   { bg: "#F0F9FF", text: "#0284C7", border: "#E0F2FE" },
+};
+
+const frontendSkills = skills.filter(s => s.category === "frontend" || s.category === "language");
+const backendSkills  = skills.filter(s => s.category === "backend");
+const toolSkills     = skills.filter(s => s.category === "devops" || s.category === "design");
+---
+
+<div
+  id="editorial-view"
+  class="fixed inset-0 overflow-y-auto"
+  style="
+    display: block;
+    top: 52px;
+    background: #F8F9FA;
+    color: #18181B;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  "
+>
+  <!-- Background ambient pattern -->
+  <div class="editorial-bg-pattern pointer-events-none fixed inset-0 opacity-40"></div>
+
+  <div class="relative max-w-6xl mx-auto px-5 sm:px-8 py-8 sm:py-12 pb-32">
+
+    <!-- ══ TOP DOSSIER TAGS ═════════════════════════════════════════ -->
+    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-10 sm:mb-12">
+      <!-- Left badge -->
+      <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full text-xs font-medium text-neutral-800 bg-neutral-100/90 border border-neutral-200 shadow-xs self-start">
+        <span class="tracking-wider uppercase font-bold text-[11px] text-neutral-900">Selected Dossier 2024 / 2025</span>
+        <span class="text-neutral-400 font-light">•</span>
+        <span class="text-neutral-600">Product Design × Creative Engineering</span>
+      </div>
+
+      <!-- Right badge -->
+      <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full text-xs font-medium text-neutral-700 bg-white border border-neutral-200/80 shadow-xs self-start sm:self-auto">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-600"></span>
+        </span>
+        <span class="font-semibold text-neutral-800">Available for Q2/Q3 Commissions</span>
+      </div>
+    </header>
+
+    <!-- ══ HERO TYPOGRAPHIC MASTHEAD ════════════════════════════════ -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12 sm:mb-16">
+      <div class="lg:col-span-9">
+        <h1 class="text-5xl sm:text-7xl lg:text-[5.5rem] font-extrabold tracking-tight leading-[0.98] text-neutral-950 font-display">
+          <span class="block">Multidisciplinary</span>
+          <span class="relative inline-block text-blue-600">
+            Designer &amp;
+            <!-- Hand-drawn vector squiggle underline exactly matching reference -->
+            <svg
+              class="absolute -bottom-2 sm:-bottom-3.5 left-0 w-full h-3 sm:h-4 text-blue-600 overflow-visible"
+              viewBox="0 0 280 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M2.5 8C52 3.2 152 2 277 6C230 9.2 125 11.5 56 12"
+                stroke="currentColor"
+                stroke-width="4.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span class="block mt-1 sm:mt-2">Creative</span>
+          <span class="block italic font-serif font-light sm:font-normal tracking-tight text-neutral-900 mt-0.5 sm:mt-1">
+            Technologist
+          </span>
+        </h1>
+      </div>
+
+      <!-- Right Column Badges (Interactive Floating & Draggable) -->
+      <div id="badges-dock" class="lg:col-span-3 flex flex-wrap lg:flex-col gap-2.5 lg:pt-3 relative select-none">
+        <!-- Interactive Hint & Reset -->
+        <div class="w-full flex items-center justify-between text-[11px] font-mono text-neutral-400 mb-0.5 px-1">
+          <span class="inline-flex items-center gap-1.5 opacity-75">
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping"></span>
+            <span>Interactive • Drag us</span>
+          </span>
+          <button
+            id="reset-badges-btn"
+            type="button"
+            class="text-neutral-400 hover:text-blue-600 transition-colors cursor-pointer text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-neutral-100 hover:bg-neutral-200"
+            title="Kembalikan posisi badges"
+          >
+            ↺ Reset
+          </button>
+        </div>
+
+        <!-- UI/UX Design -->
+        <div
+          class="editorial-floating-pill inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full text-xs font-semibold bg-[#EEF2FF] text-[#4F46E5] border border-[#E0E7FF] shadow-xs cursor-grab active:cursor-grabbing touch-none select-none"
+          data-pill-glow="rgba(79, 70, 229, 0.28)"
+        >
+          <svg class="w-4 h-4 shrink-0 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 19 7-7 3 3-7 7-3-3z"/>
+            <path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+            <path d="m2 2 7.586 7.586"/>
+            <circle cx="11" cy="11" r="2"/>
+          </svg>
+          <span class="pointer-events-none">UI/UX Design</span>
+        </div>
+
+        <!-- Design Systems -->
+        <div
+          class="editorial-floating-pill inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full text-xs font-semibold bg-[#FFF1EE] text-[#EA580C] border border-[#FFEDD5] shadow-xs cursor-grab active:cursor-grabbing touch-none select-none"
+          data-pill-glow="rgba(234, 88, 12, 0.28)"
+        >
+          <svg class="w-4 h-4 shrink-0 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          <span class="pointer-events-none">Design Systems</span>
+        </div>
+
+        <!-- Creative Coding -->
+        <div
+          class="editorial-floating-pill inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full text-xs font-semibold bg-[#F1F5F9] text-[#334155] border border-[#E2E8F0] shadow-xs cursor-grab active:cursor-grabbing touch-none select-none"
+          data-pill-glow="rgba(51, 65, 85, 0.22)"
+        >
+          <svg class="w-4 h-4 shrink-0 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"/>
+            <polyline points="8 6 2 12 8 18"/>
+          </svg>
+          <span class="pointer-events-none">Creative Coding</span>
+        </div>
+
+        <!-- Interaction Design -->
+        <div
+          class="editorial-floating-pill inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full text-xs font-semibold bg-[#F0F9FF] text-[#0284C7] border border-[#E0F2FE] shadow-xs cursor-grab active:cursor-grabbing touch-none select-none"
+          data-pill-glow="rgba(2, 132, 199, 0.28)"
+        >
+          <svg class="w-4 h-4 shrink-0 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="m4.93 4.93 4.24 4.24"/>
+            <path d="m14.83 9.17 4.24-4.24"/>
+            <path d="m14.83 14.83 4.24 4.24"/>
+            <path d="m9.17 14.83-4.24 4.24"/>
+            <circle cx="12" cy="12" r="4"/>
+          </svg>
+          <span class="pointer-events-none">Interaction Design</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ CORE TWO-COLUMN CARDS ════════════════════════════════════ -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 mb-16">
+
+      <!-- Left Card: THE CORE MISSION -->
+      <div class="lg:col-span-7 bg-white rounded-3xl p-7 sm:p-10 border border-neutral-200/80 shadow-sm relative overflow-hidden flex flex-col justify-between">
+        <!-- Subtle watermark emblem in background -->
+        <div class="absolute -bottom-8 -right-8 w-56 h-56 pointer-events-none opacity-[0.04] text-neutral-900 select-none">
+          <svg viewBox="0 0 200 200" fill="currentColor">
+            <path d="M100 0 L200 57.7 L200 173.2 L100 230.9 L0 173.2 L0 57.7 Z"/>
+            <path d="M100 30 L170 70 L170 150 L100 190 L30 150 L30 70 Z" fill="#fff"/>
+          </svg>
+        </div>
+
+        <div>
+          <!-- Mission Tagline -->
+          <div class="flex items-center gap-2 text-blue-600 font-bold text-xs tracking-widest uppercase mb-6">
+            <span>About Me</span>
+            <span class="inline-block w-8 h-px bg-blue-600"></span>
+          </div>
+
+          <!-- Bold Main Paragraph -->
+          <p class="text-neutral-900 font-semibold text-lg sm:text-xl leading-snug sm:leading-relaxed mb-5">
+            Passionate about bridging robust software architecture with intuitive user experiences. 
+            Informatics graduate (Cum Laude, GPA 3.83) specializing in Full-Stack Web Development (React.js, PHP), native Android engineering (Kotlin), and scalable system design.
+          </p>
+
+          <!-- Secondary Subtext -->
+          <p class="text-neutral-500 text-sm sm:text-[15px] leading-relaxed mb-8">
+           Translating academic research and structured project management into reliable digital products, 
+           combining clean code practices with Figma-driven UI/UX design to deliver seamless, impact-driven software solutions.
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <a
+            href="#editorial-projects"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-neutral-950 text-white text-sm font-semibold hover:bg-neutral-800 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-sm no-underline"
+          >
+            <span>Explore Selected Works</span>
+            <span class="text-base leading-none">→</span>
+          </a>
+
+          <a
+            href={`mailto:${owner.email}`}
+            class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-neutral-100 hover:bg-neutral-200/80 text-neutral-800 text-sm font-medium border border-neutral-200 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] no-underline"
+          >
+            <svg class="w-4 h-4 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <span>Book Discovery Call</span>
+          </a>
+
+          <a
+            href="#"
+            id="editorial-cv-download"
+            class="inline-flex items-center gap-1.5 px-4 py-3 rounded-full text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 text-sm font-medium transition-colors no-underline"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span>Curriculum Vitae</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Card: Profile Dossier -->
+      <div class="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-7 border border-neutral-200/80 shadow-sm flex flex-col justify-between">
+        <div>
+          <!-- Top Row: Name, Location, Level Tag -->
+          <div class="flex items-start justify-between gap-3 mb-5">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-neutral-950 tracking-tight leading-tight m-0">
+                {owner.name}
+              </h2>
+              <p class="text-xs text-neutral-500 font-medium mt-1">
+                Jakarta, ID (WIB / UTC+7) • Global Remote
+              </p>
+            </div>
+
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#EEF2FF] text-[#4F46E5] border border-[#E0E7FF] shrink-0">
+              Staff Level
+            </span>
+          </div>
+
+          <!-- Center Workspace Portrait Photo -->
+          <div class="relative rounded-2xl overflow-hidden aspect-[4/3] bg-neutral-100 border border-neutral-200/60 shadow-xs mb-5 group">
+            <img
+              src="/assets/1008.gif"
+              alt={`${owner.name} Workspace Portrait`}
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+            <!-- Dark floating pill at bottom center -->
+            <div class="absolute bottom-3 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-black/80 backdrop-blur-md text-white text-[11px] sm:text-xs font-medium border border-white/20 shadow-lg tracking-wide whitespace-nowrap">
+              Art Director &amp; Lead Engineer
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Metadata -->
+        <div class="text-center pt-2 border-t border-neutral-100">
+          <p class="text-xs font-medium text-neutral-500 tracking-wide m-0">
+            Design Systems <span class="mx-1.5 text-blue-500">•</span> Web3/WebGL <span class="mx-1.5 text-blue-500">•</span> SaaS UX
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ METRICS BAR ═══════════════════════════════════════════════ -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+      <div class="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs text-center">
+        <div class="text-3xl sm:text-4xl font-extrabold text-neutral-950 tracking-tight">5+</div>
+        <div class="text-xs font-medium text-neutral-500 mt-1 uppercase tracking-wider">Years Experience</div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs text-center">
+        <div class="text-3xl sm:text-4xl font-extrabold text-blue-600 tracking-tight">20+</div>
+        <div class="text-xs font-medium text-neutral-500 mt-1 uppercase tracking-wider">Shipped Projects</div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs text-center">
+        <div class="text-3xl sm:text-4xl font-extrabold text-neutral-950 tracking-tight">99.8%</div>
+        <div class="text-xs font-medium text-neutral-500 mt-1 uppercase tracking-wider">Performance Score</div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs text-center">
+        <div class="text-3xl sm:text-4xl font-extrabold text-neutral-950 tracking-tight">100%</div>
+        <div class="text-xs font-medium text-neutral-500 mt-1 uppercase tracking-wider">Type Safety</div>
+      </div>
+    </section>
+
+    <!-- ══ SELECTED WORKS / PROJECTS ════════════════════════════════ -->
+    <section id="editorial-projects" class="mb-20">
+      <div class="flex items-center justify-between gap-4 mb-8">
+        <div>
+          <div class="flex items-center gap-2 text-blue-600 font-bold text-xs tracking-widest uppercase mb-1">
+            <span>Portfolio Dossier</span>
+            <span class="inline-block w-6 h-px bg-blue-600"></span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight m-0">
+            Featured Case Studies &amp; Software
+          </h2>
+        </div>
+        <span class="hidden sm:inline-block text-xs font-medium text-neutral-500 px-3 py-1 bg-neutral-100 rounded-full border border-neutral-200">
+          {projects.length} Works
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {projects.map((project) => {
+          const pill = categoryPillStyle[project.category] || { bg: "#F1F5F9", text: "#334155", border: "#E2E8F0" };
+          return (
+            <article
+              class="editorial-project-card group bg-white rounded-2xl border border-neutral-200/80 overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between cursor-pointer"
+              data-project-id={project.id}
+            >
+              <div>
+                <!-- Top Header Banner -->
+                <div
+                  class="h-32 flex items-center justify-center text-4xl relative overflow-hidden"
+                  style={`background: linear-gradient(135deg, ${project.color}15, ${project.color}05);`}
+                >
+                  <span class="transform transition-transform duration-300 group-hover:scale-125">
+                    {project.icon}
+                  </span>
+                  <div
+                    class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider"
+                    style={`background: ${pill.bg}; color: ${pill.text}; border: 1px solid ${pill.border};`}
+                  >
+                    {project.category}
+                  </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="p-6">
+                  <h3 class="text-lg font-bold text-neutral-900 group-hover:text-blue-600 transition-colors mb-2">
+                    {project.title}
+                  </h3>
+                  <p class="text-neutral-500 text-xs sm:text-sm leading-relaxed mb-4">
+                    {project.description}
+                  </p>
+
+                  <!-- Tech stack pills -->
+                  <div class="flex flex-wrap gap-1.5 mb-2">
+                    {project.techStack.map((tech) => (
+                      <span class="text-[11px] font-medium px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 border border-neutral-200/60">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card Action Bar -->
+              <div class="px-6 py-4 bg-neutral-50/70 border-t border-neutral-100 flex items-center justify-between text-xs font-semibold">
+                <span class="text-blue-600 group-hover:underline flex items-center gap-1">
+                  View Case Study
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </span>
+                {project.github && (
+                  <span class="text-neutral-400 group-hover:text-neutral-700 transition-colors">
+                    GitHub ↗
+                  </span>
+                )}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- ══ EXPERIENCE & BACKGROUND ═══════════════════════════════════ -->
+    <section class="mb-20">
+      <div class="flex items-center gap-2 text-blue-600 font-bold text-xs tracking-widest uppercase mb-1">
+        <span>Curriculum Chronology</span>
+        <span class="inline-block w-6 h-px bg-blue-600"></span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight mb-8">
+        Professional Experience &amp; Leadership
+      </h2>
+
+      <div class="flex flex-col gap-5">
+        {experiences.map((exp) => (
+          <div class="bg-white rounded-2xl p-7 border border-neutral-200/80 shadow-xs relative">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+              <div>
+                <h3 class="text-lg font-bold text-neutral-950">{exp.role}</h3>
+                <p class="text-sm font-medium text-blue-600">{exp.company}</p>
+              </div>
+              <div class="flex items-center gap-2">
+                {exp.current && (
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Current
+                  </span>
+                )}
+                <span class="px-3 py-1 rounded-full text-xs font-medium bg-neutral-100 text-neutral-600 border border-neutral-200">
+                  {exp.period}
+                </span>
+              </div>
+            </div>
+
+            <ul class="flex flex-col gap-2 m-0 p-0 list-none">
+              {exp.achievements.map((item) => (
+                <li class="text-xs sm:text-sm text-neutral-600 flex items-start gap-2.5 leading-relaxed">
+                  <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0"></span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ══ TECHNICAL CAPABILITIES MATRIX ═════════════════════════════ -->
+    <section class="mb-20">
+      <div class="flex items-center gap-2 text-blue-600 font-bold text-xs tracking-widest uppercase mb-1">
+        <span>Technical Arsenal</span>
+        <span class="inline-block w-6 h-px bg-blue-600"></span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight mb-8">
+        Architecture, Graphics &amp; Tooling
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Frontend & Creative -->
+        <div class="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-xs">
+          <div class="flex items-center gap-2.5 text-neutral-900 font-bold text-sm mb-4">
+            <span class="p-1.5 rounded-lg bg-indigo-50 text-indigo-600">✦</span>
+            <span>Frontend &amp; Creative Code</span>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {frontendSkills.map((s) => (
+              <span class="px-3 py-1.5 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-700 border border-neutral-200/70 hover:bg-neutral-100 transition-colors">
+                {s.name}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <!-- Backend & Infrastructure -->
+        <div class="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-xs">
+          <div class="flex items-center gap-2.5 text-neutral-900 font-bold text-sm mb-4">
+            <span class="p-1.5 rounded-lg bg-emerald-50 text-emerald-600">⚙</span>
+            <span>Backend &amp; Systems</span>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {backendSkills.map((s) => (
+              <span class="px-3 py-1.5 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-700 border border-neutral-200/70 hover:bg-neutral-100 transition-colors">
+                {s.name}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <!-- DevOps & Design Tooling -->
+        <div class="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-xs">
+          <div class="flex items-center gap-2.5 text-neutral-900 font-bold text-sm mb-4">
+            <span class="p-1.5 rounded-lg bg-amber-50 text-amber-600">⚒</span>
+            <span>DevOps &amp; Interface Design</span>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {toolSkills.map((s) => (
+              <span class="px-3 py-1.5 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-700 border border-neutral-200/70 hover:bg-neutral-100 transition-colors">
+                {s.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ CONTACT / INQUIRY BANNER ══════════════════════════════════ -->
+    <section class="bg-white rounded-3xl p-8 sm:p-12 border border-neutral-200/80 shadow-sm text-center relative overflow-hidden mb-16">
+      <div class="max-w-2xl mx-auto">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-100 mb-4">
+          Open For New Engagements
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-neutral-950 tracking-tight mb-4">
+          Let’s construct something extraordinary together.
+        </h2>
+        <p class="text-neutral-500 text-sm sm:text-base leading-relaxed mb-8">
+          Whether you need a full digital product, a bespoke design system, or high-performance WebGL &amp; interaction engineering, my inbox is open.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <a
+            href={`mailto:${owner.email}`}
+            class="px-8 py-3.5 rounded-full bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-all hover:scale-105 active:scale-95 shadow-md shadow-blue-600/20 no-underline"
+          >
+            Send Inquiry Email →
+          </a>
+          <button
+            id="editorial-copy-email"
+            class="px-6 py-3.5 rounded-full bg-neutral-100 hover:bg-neutral-200/80 text-neutral-800 font-medium text-sm border border-neutral-200 transition-all cursor-pointer"
+            data-email={owner.email}
+          >
+            📋 Copy Email
+          </button>
+        </div>
+
+        <!-- Social Media Badges -->
+        <div class="flex items-center justify-center gap-4 mt-8 pt-6 border-t border-neutral-100">
+          {socials.map((s) => (
+            <a
+              href={s.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-xs text-neutral-500 hover:text-neutral-950 font-medium transition-colors no-underline"
+            >
+              {s.platform} ↗
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ FOOTER ════════════════════════════════════════════════════ -->
+    <footer class="text-center text-xs text-neutral-400 py-6 border-t border-neutral-200/60 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div>
+        © 2025 {owner.name} Studio. All rights reserved.
+      </div>
+      <div class="flex items-center gap-4">
+        <span>Selected Dossier Mode</span>
+        <span>•</span>
+        <a href={`mailto:${owner.email}`} class="text-neutral-600 hover:text-neutral-950 transition-colors">
+          {owner.email}
+        </a>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<script>
+  import { projects } from "../data/portfolio";
+
+  // Pastikan theme-editorial aktif untuk styling navbar terang
+  document.body.classList.add("theme-editorial");
+
+  // Project cards trigger modal
+  document.querySelectorAll(".editorial-project-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      const id = (card as HTMLElement).dataset.projectId;
+      const project = projects.find((p) => p.id === id);
+      if (project) {
+        document.dispatchEvent(
+          new CustomEvent("openProjectModal", { detail: project })
+        );
+      }
+    });
+  });
+
+  // Copy email button
+  const copyBtn = document.getElementById("editorial-copy-email");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", () => {
+      const email = copyBtn.getAttribute("data-email") || "";
+      navigator.clipboard.writeText(email).then(() => {
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = "✓ Email Copied!";
+        setTimeout(() => {
+          copyBtn.textContent = originalText;
+        }, 2000);
+      });
+    });
+  }
+
+  // CV Download alert / prompt
+  const cvBtn = document.getElementById("editorial-cv-download");
+  if (cvBtn) {
+    cvBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.print();
+    });
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // INTERACTIVE FLOATING & DRAGGABLE BADGES PHYSICS ENGINE
+  // ══════════════════════════════════════════════════════════════
+  interface BadgePhysics {
+    el: HTMLElement;
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    lastPointerX: number;
+    lastPointerY: number;
+    lastTime: number;
+    isDragging: boolean;
+    isHovered: boolean;
+    phase: number;
+    speed: number;
+    ampY: number;
+    rotAmp: number;
+    glow: string;
+    zIndex: number;
+  }
+
+  const pills = Array.from(document.querySelectorAll<HTMLElement>(".editorial-floating-pill"));
+  const resetBtn = document.getElementById("reset-badges-btn");
+
+  const badgeStates: BadgePhysics[] = pills.map((el, i) => {
+    // Unique float characteristics for organic feel
+    const phases = [0.2, 1.9, 3.6, 5.2];
+    const speeds = [0.0022, 0.0018, 0.0024, 0.0019];
+    const ampsY = [4.5, 6.0, 5.0, 5.5];
+    const rotAmps = [1.8, -2.2, 1.5, -1.9];
+    const glow = el.dataset.pillGlow || "rgba(0,0,0,0.15)";
+
+    return {
+      el,
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      lastPointerX: 0,
+      lastPointerY: 0,
+      lastTime: 0,
+      isDragging: false,
+      isHovered: false,
+      phase: phases[i % phases.length],
+      speed: speeds[i % speeds.length],
+      ampY: ampsY[i % ampsY.length],
+      rotAmp: rotAmps[i % rotAmps.length],
+      glow,
+      zIndex: 10 + i,
+    };
+  });
+
+  let topZIndex = 30;
+
+  badgeStates.forEach((state) => {
+    const { el } = state;
+
+    // Hover detection
+    el.addEventListener("mouseenter", () => {
+      state.isHovered = true;
+    });
+    el.addEventListener("mouseleave", () => {
+      state.isHovered = false;
+    });
+
+    // Pointer Drag handlers
+    el.addEventListener("pointerdown", (e: PointerEvent) => {
+      e.preventDefault();
+      try {
+        el.setPointerCapture(e.pointerId);
+      } catch {}
+
+      state.isDragging = true;
+      state.vx = 0;
+      state.vy = 0;
+      state.lastPointerX = e.clientX;
+      state.lastPointerY = e.clientY;
+      state.lastTime = performance.now();
+
+      topZIndex += 1;
+      state.zIndex = topZIndex;
+      el.style.zIndex = `${state.zIndex}`;
+      el.classList.add("is-dragging");
+    });
+
+    el.addEventListener("pointermove", (e: PointerEvent) => {
+      if (!state.isDragging) return;
+
+      const now = performance.now();
+      const dt = Math.max(1, now - state.lastTime);
+      const dx = e.clientX - state.lastPointerX;
+      const dy = e.clientY - state.lastPointerY;
+
+      state.x += dx;
+      state.y += dy;
+
+      // Track instantaneous velocity
+      state.vx = (dx / dt) * 14;
+      state.vy = (dy / dt) * 14;
+
+      state.lastPointerX = e.clientX;
+      state.lastPointerY = e.clientY;
+      state.lastTime = now;
+    });
+
+    const stopDrag = (e: PointerEvent) => {
+      if (!state.isDragging) return;
+      state.isDragging = false;
+      try {
+        el.releasePointerCapture(e.pointerId);
+      } catch {}
+      el.classList.remove("is-dragging");
+    };
+
+    el.addEventListener("pointerup", stopDrag);
+    el.addEventListener("pointercancel", stopDrag);
+  });
+
+  // Reset positions button
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      badgeStates.forEach((state) => {
+        state.vx = 0;
+        state.vy = 0;
+        // Smooth snap back
+        state.el.style.transition = "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)";
+        state.x = 0;
+        state.y = 0;
+        setTimeout(() => {
+          state.el.style.transition = "";
+        }, 500);
+      });
+    });
+  }
+
+  // Animation Loop (60-120fps)
+  function physicsLoop(timestamp: number) {
+    badgeStates.forEach((state) => {
+      const { el } = state;
+
+      if (!state.isDragging) {
+        // Friction / Inertia decay
+        state.vx *= 0.90;
+        state.vy *= 0.90;
+        state.x += state.vx;
+        state.y += state.vy;
+
+        // Ambient idle floating calculation
+        const floatY = Math.sin(timestamp * state.speed + state.phase) * state.ampY;
+        const floatRot = Math.cos(timestamp * state.speed + state.phase) * state.rotAmp;
+
+        const currentScale = state.isHovered ? 1.08 : 1;
+        el.style.transform = `translate3d(${state.x}px, ${state.y + floatY}px, 0) rotate(${floatRot}deg) scale(${currentScale})`;
+      } else {
+        // Dynamic tilt based on drag velocity
+        const dragTilt = Math.max(-14, Math.min(14, state.vx * 0.45));
+        el.style.transform = `translate3d(${state.x}px, ${state.y}px, 0) rotate(${dragTilt}deg) scale(1.12)`;
+      }
+    });
+
+    requestAnimationFrame(physicsLoop);
+  }
+
+  requestAnimationFrame(physicsLoop);
+</script>
+
+<style>
+  /* Scoped styles specifically for the Editorial Dossier theme */
+  #editorial-view {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  }
+
+  #editorial-view h1,
+  #editorial-view h2,
+  #editorial-view h3,
+  #editorial-view .font-display {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  }
+
+  #editorial-view .font-serif {
+    font-family: 'Newsreader', Georgia, serif !important;
+  }
+
+  /* Micro ambient dot grid */
+  .editorial-bg-pattern {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Custom scrollbar for editorial view */
+  #editorial-view::-webkit-scrollbar {
+    width: 6px;
+  }
+  #editorial-view::-webkit-scrollbar-track {
+    background: #F1F3F5;
+  }
+  #editorial-view::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 3px;
+  }
+  #editorial-view::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+  }
+
+  /* Interactive floating pill styles */
+  .editorial-floating-pill {
+    position: relative;
+    will-change: transform;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.25s ease, filter 0.25s ease;
+  }
+
+  .editorial-floating-pill:hover {
+    box-shadow: 0 10px 24px var(--pill-glow, rgba(0, 0, 0, 0.12));
+    filter: brightness(1.02);
+  }
+
+  .editorial-floating-pill.is-dragging {
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.18), 0 4px 10px rgba(0, 0, 0, 0.1);
+    filter: brightness(1.05);
+    cursor: grabbing !important;
+  }
+</style>
+

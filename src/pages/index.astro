@@ -1,33 +1,48 @@
 ---
-// index.astro — Halaman utama portofolio dengan dual view
+// index.astro — Halaman utama portofolio
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navbar from "../components/Navbar.astro";
-import FarmCanvas from "../components/FarmCanvas.astro";
-import ClassicView from "../components/ClassicView.astro";
+import EditorialView from "../components/EditorialView.astro";
 import ProjectModal from "../components/ProjectModal.astro";
-import ViewToggle from "../components/ViewToggle.astro";
+
+// ══════════════════════════════════════════════════════════════
+// MODE NONAKTIF SEMENTARA: FarmCanvas, ClassicView, & ViewToggle
+// Hapus komentar import di bawah ini jika ingin mengaktifkan kembali:
+// ══════════════════════════════════════════════════════════════
+// import FarmCanvas from "../components/FarmCanvas.astro";
+// import ClassicView from "../components/ClassicView.astro";
+// import ViewToggle from "../components/ViewToggle.astro";
 ---
 
 <BaseLayout
   title="Candra Bagus — Full-Stack Developer & Creative Coder"
-  description="Portofolio interaktif Candra Bagus. Full-Stack Developer yang membangun antarmuka hidup dan sistem solid. Jelajahi proyek di pixel farm atau baca CV klasik."
+  description="Portofolio Candra Bagus. Full-Stack Developer & Creative Technologist yang membangun antarmuka hidup dan sistem solid."
 >
   <!-- Fixed Navbar -->
   <Navbar />
 
-  <!-- Farm Mode (default) -->
-  <FarmCanvas />
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- AKTIF: Modern Editorial Dossier View                          -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <EditorialView />
 
-  <!-- Classic Resume Mode (hidden by default) -->
-  <ClassicView />
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- NONAKTIF SEMENTARA:                                           -->
+  <!-- Jika ingin mengaktifkan FarmCanvas atau ClassicView kembali:   -->
+  <!-- 1. Uncomment baris import di bagian atas                     -->
+  <!-- 2. Hapus komentar pada 3 tag di bawah ini:                   -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- <FarmCanvas /> -->
+  <!-- <ClassicView /> -->
+  <!-- <ViewToggle /> -->
 
-  <!-- Project Modal (shared antara kedua mode) -->
+  <!-- Project Modal (shared untuk melihat detail proyek) -->
   <ProjectModal />
 
-  <!-- Toggle button -->
-  <ViewToggle />
-
-  <!-- Loading overlay saat PixiJS init -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- Loading overlay dinonaktifkan sementara bersama FarmCanvas   -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!--
   <div
     id="loading-overlay"
     class="fixed inset-0 z-[200] flex flex-col items-center justify-center"
@@ -59,51 +74,5 @@ import ViewToggle from "../components/ViewToggle.astro";
       <span id="loading-text">Menanam benih...</span>
     </p>
   </div>
+  -->
 </BaseLayout>
-
-<style>
-  @keyframes pixelSpin {
-    0%   { transform: rotate(0deg) scale(1); }
-    25%  { transform: rotate(90deg) scale(1.1); }
-    50%  { transform: rotate(180deg) scale(1); }
-    75%  { transform: rotate(270deg) scale(0.9); }
-    100% { transform: rotate(360deg) scale(1); }
-  }
-</style>
-
-<script>
-  const loadingTexts = [
-    "Menanam benih...",
-    "Menyiram kebun...",
-    "Menumbuhkan proyek...",
-    "Membuka gerbang farm...",
-  ];
-
-  let textIdx = 0;
-  const loadingText = document.getElementById("loading-text")!;
-  const textInterval = setInterval(() => {
-    textIdx = (textIdx + 1) % loadingTexts.length;
-    loadingText.textContent = loadingTexts[textIdx];
-  }, 600);
-
-  function hideLoading(): void {
-    clearInterval(textInterval);
-    const overlay = document.getElementById("loading-overlay")!;
-    overlay.style.opacity = "0";
-    setTimeout(() => {
-      overlay.style.display = "none";
-    }, 600);
-  }
-
-  const loadTimeout = setTimeout(hideLoading, 4000);
-
-  document.addEventListener("farmReady", () => {
-    clearTimeout(loadTimeout);
-    hideLoading();
-  });
-
-  const savedView = localStorage.getItem("portfolioView");
-  if (savedView === "classic") {
-    setTimeout(hideLoading, 300);
-  }
-</script>
