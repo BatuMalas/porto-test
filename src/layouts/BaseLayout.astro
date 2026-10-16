@@ -1,6 +1,7 @@
 ---
-// BaseLayout.astro — Layout utama + SEO meta tags
+// src/layouts/BaseLayout.astro BaseLayout.astro — Layout utama + SEO meta tags
 import "../styles/global.css";
+import Analytics from "@vercel/analytics/astro";
 
 interface Props {
   title?: string;
@@ -56,28 +57,32 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl);
   </head>
   <body class="bg-[#0d0d1a] text-white overflow-hidden">
     <slot />
+    <Analytics />
   </body>
 </html>
 
 <style is:global>
   :root {
-    --c-accent:   #7C3AED;
-    --c-accent2:  #06b6d4;
-    --c-bg:       #0d0d1a;
-    --c-surface:  #1a1a2e;
-    --c-border:   rgba(255,255,255,0.08);
-    --c-text:     #e2e8f0;
-    --c-muted:    #64748b;
-    --font-pixel: 'Press Start 2P', monospace;
-    --font-sans:  'Geist Pixel', system-ui, sans-serif;
-    --font-mono:  'JetBrains Mono', monospace;
-    --font-header: 'Pixelify Sans', system-ui, sans-serif;
-    --font-body:   'Geist Pixel', system-ui, sans-serif;
+    --c-accent: #7c3aed;
+    --c-accent2: #06b6d4;
+    --c-bg: #0d0d1a;
+    --c-surface: #1a1a2e;
+    --c-border: rgba(255, 255, 255, 0.08);
+    --c-text: #e2e8f0;
+    --c-muted: #64748b;
+    --font-pixel: "Press Start 2P", monospace;
+    --font-sans: "Geist Pixel", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+    --font-header: "Pixelify Sans", system-ui, sans-serif;
+    --font-body: "Geist Pixel", system-ui, sans-serif;
   }
 
-  * { box-sizing: border-box; }
+  * {
+    box-sizing: border-box;
+  }
 
-  html, body {
+  html,
+  body {
     margin: 0;
     padding: 0;
     width: 100%;
@@ -87,15 +92,30 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl);
     color: var(--c-text);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-header);
   }
 
   /* Scrollbar custom */
-  ::-webkit-scrollbar       { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--c-surface); }
-  ::-webkit-scrollbar-thumb { background: var(--c-accent); border-radius: 3px; }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--c-surface);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--c-accent);
+    border-radius: 3px;
+  }
 
   /* Selection */
-  ::selection { background: var(--c-accent); color: white; }
+  ::selection {
+    background: var(--c-accent);
+    color: white;
+  }
 </style>
