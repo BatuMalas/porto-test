@@ -49,10 +49,11 @@ export const owner = {
   bio: "Membangun antarmuka yang hidup dan sistem yang solid. Suka eksplorasi di persimpangan antara seni, teknologi, dan interaksi. Focused on crafting high-performance digital experiences with pixel-perfect precision.",
   location: "Indonesia, 🇮🇩",
   avatar: "/assets/avatar.png",
-  email: "candra.bagus@dev.com",
-  website: "candrabagas.id",
-  yearsOfExperience: 5,
-  summary: "With over 5 years of experience in technical architecture and frontend engineering, I specialize in building scalable web applications that don't just work — they perform. My philosophy is rooted in the belief that software should be as elegant internally as it is externally. I leverage a deep understanding of React, Node.js, and Cloud infrastructure to solve complex business problems through clean, maintainable code.",
+  email: "abaguscandra@gmail.com",
+  website: "candrabagus.com",
+  resume: "/assets/my_cv_Candra1.pdf",
+  yearsOfExperience: 2,
+  summary: "With over 2 years of experience in technical architecture and frontend engineering, I specialize in building scalable web applications that don't just work — they perform. My philosophy is rooted in the belief that software should be as elegant internally as it is externally. I leverage a deep understanding of React, Node.js, and Cloud infrastructure to solve complex business problems through clean, maintainable code.",
 };
 
 export const projects: Project[] = [
@@ -65,7 +66,7 @@ export const projects: Project[] = [
     techStack: ["Astro", "PixiJS", "TypeScript", "Tailwind CSS"],
     category: "web",
     github: "https://github.com/candrabagus/portfolio",
-    live: "https://candrabagus.dev",
+    live: "https://candrabagus.com",
     color: "#7C3AED",
     icon: "🌾",
     tileX: 3,
@@ -167,18 +168,13 @@ export const skills: Skill[] = [
 export const socials: Social[] = [
   {
     platform: "GitHub",
-    url: "https://github.com/candrabagus",
+    url: "https://github.com/BatuMalas",
     icon: "github",
   },
   {
     platform: "LinkedIn",
-    url: "https://linkedin.com/in/candrabagus",
+    url: "https://www.linkedin.com/in/candra-bagus-ar/",
     icon: "linkedin",
-  },
-  {
-    platform: "Twitter / X",
-    url: "https://x.com/candrabagus",
-    icon: "twitter",
   },
 ];
 
