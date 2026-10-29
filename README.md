@@ -1,81 +1,81 @@
-# 🌾 Pixel Farm Portfolio
+# Minimalist Personal Portfolio & Showcase
 
-Portofolio interaktif dengan dua mode tampilan — **Farm Mode** (peta pixel interaktif) dan **Classic Mode** (CV/resume standar).
+Portofolio personal dan etalase karya digital yang dibangun dengan **Astro**, **TypeScript**, dan **Tailwind CSS**. Mengusung konsep *Modern Editorial Dossier* dengan fokus pada tipografi yang kuat, presentasi studi kasus yang mendalam, dan micro-interactions yang responsif.
 
 ---
 
 ## ⚡ Cara Menjalankan
 
-> **PENTING:** Buka terminal kamu sendiri (PowerShell / CMD), jangan lewat IDE terminal yang cepat tutup.
+### 1. Development (Lokal)
 
-### 1. Development (lokal)
-
-```powershell
-cd C:\Code\porto-test
+```bash
 npm run dev
 ```
 
-Lalu buka browser → **`http://localhost:4321`**
-
-Biarkan terminal tetap terbuka selama development. Tekan `Ctrl+C` untuk stop.
+Buka browser di **`http://localhost:4321`**.
 
 ### 2. Build Production
 
-```powershell
-cd C:\Code\porto-test
+```bash
 npm run build
 ```
 
-Hasil build ada di folder `dist/` — siap di-deploy ke Netlify / Vercel / GitHub Pages.
+Hasil build statis akan disimpan di folder `dist/` — siap di-deploy ke **Vercel**, **Netlify**, atau platform hosting statis lainnya.
 
-### 3. Preview Build Production (opsional)
+### 3. Preview Production Build
 
-```powershell
+```bash
 npm run preview
 ```
-Untuk kedepannya, gunakan perintah berikut untuk mengelola dev server:
 
-Stop: npx astro dev stop
-Status: npx astro dev status
-Logs: npx astro dev logs
+---
+
+## 🌟 Fitur Unggulan
+
+- **📂 Project Showcase & Case Studies Modal**  
+  Etalase proyek pilihan dengan modal pop-up interaktif yang menampilkan detail arsitektur, tech stack, serta tautan ke source code (GitHub) dan live preview.
+- **🪐 Interactive 3D Planetary Tech Orbit**  
+  Visualisasi horizontal 3D tech stack berbentuk orbit planet dan satelit yang dapat digeser (*drag-to-spin*) atau diputar secara otomatis dengan efek kedalaman dinamis.
+- **🎯 Interactive Draggable Badges**  
+  Elemen badge kreatif dengan simulasi inersia dan fisika gravitasi halus yang dapat ditarik (*drag & drop*).
+- **📄 CV / Resume Integration**  
+  Akses langsung ke Curriculum Vitae PDF terintegrasi langsung dari file data profil.
+- **⚡ Super Fast & Lightweight**  
+  Dibangun dengan arsitektur Astro Islands (zero JS secara default untuk elemen statis) sehingga menghasilkan waktu muat halaman yang sangat cepat.
+
 ---
 
 ## 📁 Struktur Folder
 
 ```
-C:\Code\porto-test\
+porto-test/
 │
-├── public/                     # File statis (langsung di-serve)
-│   └── favicon.svg             # Ikon tab browser (pixel art "CB")
+├── public/
+│   ├── assets/                 # Aset gambar, avatar, GIF, dan CV (PDF)
+│   └── favicon.svg             # Favicon website
 │
 ├── src/
 │   ├── components/             # Komponen UI (Astro)
-│   │   ├── ClassicView.astro   # Tampilan CV/resume klasik
-│   │   ├── FarmCanvas.astro    # Wrapper canvas PixiJS (Farm Mode)
-│   │   ├── Navbar.astro        # Header atas (nama + social links)
-│   │   ├── ProjectModal.astro  # Pop-up detail proyek (glassmorphism)
-│   │   └── ViewToggle.astro    # Tombol toggle Farm ↔ CV
+│   │   ├── EditorialView.astro # Halaman utama (Modern Editorial Dossier)
+│   │   ├── TechPlanetaryOrbit.astro # Komponen 3D Planetary Orbit Stack
+│   │   ├── Navbar.astro        # Header navigasi & link sosial
+│   │   ├── ProjectModal.astro  # Pop-up modal studi kasus proyek
+│   │   └── ClassicView.astro   # Mode CV klasik alternatif
 │   │
 │   ├── data/
-│   │   └── portfolio.ts        # ⭐ DATA UTAMA — edit di sini!
-│   │                           #    (nama, bio, proyek, skill, kontak)
+│   │   └── portfolio.ts        # ⭐ DATA UTAMA — edit semua konten di sini!
+│   │                           #    (profil, pengalaman, proyek, CV, skill)
 │   │
 │   ├── layouts/
-│   │   └── BaseLayout.astro    # Layout dasar + meta SEO semua halaman
+│   │   └── BaseLayout.astro    # Layout dasar, font Google, dan meta SEO
 │   │
 │   ├── pages/
-│   │   └── index.astro         # Halaman utama (root "/")
-│   │
-│   ├── pixi/                   # Engine PixiJS (Farm Mode)
-│   │   ├── constants.ts        # Ukuran tile, warna palet, z-index
-│   │   ├── FarmApp.ts          # Bootstrap PixiJS v8 Application
-│   │   ├── ProjectNode.ts      # Sprite bangunan interaktif per proyek
-│   │   └── WorldMap.ts         # Render tilemap peta kebun
+│   │   └── index.astro         # Entrypoint halaman utama
 │   │
 │   └── styles/
-│       └── global.css          # CSS global + Tailwind v4 import
+│       └── global.css          # CSS global & tokens
 │
-├── astro.config.mjs            # Konfigurasi Astro + Tailwind plugin
+├── astro.config.mjs            # Konfigurasi Astro
 ├── package.json                # Dependencies & scripts
 └── tsconfig.json               # Konfigurasi TypeScript
 ```
@@ -84,84 +84,64 @@ C:\Code\porto-test\
 
 ## ✏️ Cara Edit Konten
 
-Semua konten portofolio ada di **satu file**:
+Semua data portofolio bersifat terpusat (*single source of truth*) di:
 
 ```
 src/data/portfolio.ts
 ```
 
-### Edit profil/bio:
+### 1. Mengubah Data Profil & Bio
 ```typescript
 export const owner = {
-  name: "Nama Kamu",
-  title: "Jabatan / Tagline",
-  bio: "Deskripsi singkat tentang kamu...",
-  location: "Kota, Negara",
-  email: "email@kamu.dev",
+  name: "Candra Bagus",
+  title: "Full-Stack Developer & Creative Coder",
+  bio: "Membangun antarmuka yang hidup dan sistem yang solid...",
+  email: "abaguscandra@gmail.com",
+  resume: "/assets/my_cv_Candra1.pdf", // Path file CV Anda
+  yearsOfExperience: 2,
 };
 ```
 
-### Tambah proyek baru:
+### 2. Menambah / Mengubah Proyek
 ```typescript
-{
-  id: "nama-unik-proyek",         // ID unik, tanpa spasi
-  title: "Nama Proyek",
-  description: "Deskripsi singkat",
-  longDescription: "Deskripsi panjang untuk modal popup",
-  techStack: ["React", "Node.js"],
-  category: "web",                // web | mobile | game | ai | tool
-  github: "https://github.com/...",
-  live: "https://...",            // opsional
-  color: "#7C3AED",               // warna aksen bangunan di farm
-  icon: "🚀",                     // emoji ikon
-  tileX: 5,                       // posisi kolom di peta (0-17)
-  tileY: 3,                       // posisi baris di peta (0-9)
-},
-```
-
-> **Tips posisi tile:** Farm punya grid **18 kolom × 10 baris**. Cek `src/pixi/constants.ts` untuk ukuran peta. Hindari posisi yang sudah dipakai proyek lain.
-
-### Edit social links:
-```typescript
-export const socials = [
-  { platform: "GitHub",   url: "https://github.com/...",   icon: "github" },
-  { platform: "LinkedIn", url: "https://linkedin.com/...", icon: "linkedin" },
-  { platform: "Twitter",  url: "https://x.com/...",        icon: "twitter" },
+export const projects: Project[] = [
+  {
+    id: "nama-proyek",
+    title: "Judul Proyek",
+    description: "Deskripsi singkat yang tampil di kartu",
+    longDescription: "Deskripsi lengkap studi kasus yang tampil di modal pop-up",
+    techStack: ["React", "Astro", "Tailwind CSS"],
+    category: "web", // "web" | "mobile" | "game" | "ai" | "tool"
+    github: "https://github.com/...",
+    live: "https://...",
+    color: "#7C3AED",
+    icon: "🌾",
+  },
 ];
 ```
 
 ---
 
+## 🌾 Proyek Terkait / Mendatang (Upcoming)
+
+- **Pixel Farm Portfolio (WebGL / PixiJS Experiment)**  
+  Eksperimen interaktif berbasis WebGL peta pixel kebun (*farm mechanic*) yang sebelumnya tergabung dalam repositori ini sedang dipersiapkan untuk dirilis sebagai **web/repositori terpisah** agar menjadi showcase interaktif khusus.
+
+---
+
 ## 🛠️ Tech Stack
 
-| Teknologi | Versi | Fungsi |
-|---|---|---|
-| **Astro** | v7 (latest) | Framework SSG + routing + SEO |
-| **PixiJS** | v8 | WebGL/WebGPU rendering Farm Mode |
-| **Tailwind CSS** | v4 | Styling UI overlay & komponen |
-| **GSAP** | latest | Animasi hover & transisi sprite |
-| **TypeScript** | strict | Type safety seluruh project |
-
----
-
-## 🚀 Deploy ke Netlify / Vercel
-
-### Netlify (drag & drop):
-1. `npm run build`
-2. Upload folder `dist/` ke [netlify.com/drop](https://app.netlify.com/drop)
-
-### Vercel (GitHub):
-1. Push ke GitHub
-2. Import di [vercel.com](https://vercel.com) → framework: **Astro**
-3. Auto-deploy setiap push!
-
----
-
-## ❓ Troubleshooting
-
-| Masalah | Solusi |
+| Teknologi | Fungsi |
 |---|---|
-| `localhost:4321` tidak bisa diakses | Pastikan terminal tetap terbuka saat `npm run dev` berjalan |
-| Farm tidak muncul (layar hitam) | Browser tidak support WebGL → klik tombol "CV" untuk Classic Mode |
-| Port 4321 sudah dipakai | `npm run dev -- --port 3000` |
-| Perubahan tidak ter-update | Simpan file → Astro hot-reload otomatis dalam ~1 detik |
+| **Astro** | Web Framework untuk SSG, routing, dan performa tinggi |
+| **TypeScript** | Type safety dan keandalan kode di seluruh data & komponen |
+| **Tailwind CSS** | Styling modern dan responsif |
+| **Vanilla CSS 3D** | Animasi fisika dan rotasi orbit 3D tanpa library eksternal berat |
+
+---
+
+## 👤 Author
+
+**Candra Bagus**
+- GitHub: [@BatuMalas](https://github.com/BatuMalas)
+- LinkedIn: [candra-bagus-ar](https://www.linkedin.com/in/candra-bagus-ar/)
