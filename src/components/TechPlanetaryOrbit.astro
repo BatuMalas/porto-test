@@ -1,0 +1,972 @@
+---
+// TechPlanetaryOrbit.astro — 3D Planetary Inline Orbit Carousel
+// Formasi 3 planet berjejer lurus secara horizontal di sumbu X dengan fokus utama di tengah.
+// Orbit elips horizontal memanjang dengan perpindahan smooth snap, z-index depth, dan satelit anti-tabrakan.
+---
+
+<div class="tech-planetary-carousel w-full relative select-none">
+  <!-- Interactive Navigation Controls & Drag Hint -->
+  <div
+    class="w-full flex items-center justify-between sm:justify-center gap-4 mb-4 px-2"
+  >
+    <!-- Left spin button (Putar Kiri: geser formasi ke kiri) -->
+    <button
+      id="planet-spin-prev"
+      type="button"
+      class="p-2 sm:px-4 sm:py-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-xs font-mono font-bold transition-all hover:scale-105 active:scale-95 shadow-2xs border border-neutral-200/90 cursor-pointer flex items-center gap-2 group"
+      title="Putar formasi ke kiri"
+    >
+      <svg
+        class="w-4 h-4 transition-transform group-hover:-translate-x-0.5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+      >
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      <!-- <span class="hidden sm:inline font-sans font-semibold">Putar Kiri</span> -->
+    </button>
+
+    <!-- Center Drag Hint Badge with orbital arrow icon -->
+    <div
+      class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/95 border border-neutral-200/90 text-xs font-mono text-neutral-600 shadow-xs"
+    >
+      <svg
+        class="w-4 h-4 text-blue-600 animate-spin"
+        style="animation-duration: 8s;"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M21 12a9 9 0 11-6.219-8.56"></path>
+      </svg>
+      <!-- <span class="font-sans font-medium text-neutral-700">Geser horizontal untuk memutar formasi</span> -->
+    </div>
+
+    <!-- Right spin button (Putar Kanan: geser formasi ke kanan) -->
+    <button
+      id="planet-spin-next"
+      type="button"
+      class="p-2 sm:px-4 sm:py-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-xs font-mono font-bold transition-all hover:scale-105 active:scale-95 shadow-2xs border border-neutral-200/90 cursor-pointer flex items-center gap-2 group"
+      title="Putar formasi ke kanan"
+    >
+      <!-- <span class="hidden sm:inline font-sans font-semibold">Putar Kanan</span> -->
+      <svg
+        class="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+      >
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Main 3D Carousel Stage (Horizontal Inline Layout) -->
+  <div
+    id="carousel-stage"
+    class="relative w-full h-[440px] sm:h-[470px] flex items-center justify-center overflow-visible cursor-grab active:cursor-grabbing touch-none select-none"
+  >
+    <!-- ═══ PLANET 0: FRONT END ═════════════════════════════════════ -->
+    <div
+      class="planet-system-node absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto cursor-pointer"
+      data-index="0"
+      data-id="frontend"
+    >
+      <div
+        class="planet-system-inner relative w-[260px] h-[260px] flex items-center justify-center"
+      >
+        <!-- Local Orbit rings around this planet -->
+        <svg
+          class="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
+          viewBox="-130 -130 260 260"
+        >
+          <ellipse
+            cx="0"
+            cy="0"
+            rx="100"
+            ry="40"
+            fill="none"
+            stroke="#2563EB"
+            stroke-opacity="0.35"
+            stroke-width="1.8"
+            transform="rotate(-18)"></ellipse>
+          <ellipse
+            cx="0"
+            cy="0"
+            rx="108"
+            ry="44"
+            fill="none"
+            stroke="#94A3B8"
+            stroke-opacity="0.45"
+            stroke-width="1.4"
+            stroke-dasharray="4 4"
+            transform="rotate(22)"></ellipse>
+        </svg>
+
+        <!-- Central Planet Globe -->
+        <div
+          class="planet-globe relative z-10 w-32 h-32 sm:w-36 sm:h-36 rounded-full flex flex-col items-center justify-center text-center bg-white border-[4px] border-blue-600 shadow-xl select-none"
+        >
+          <div
+            class="absolute inset-1.5 rounded-full border-2 border-dashed border-blue-300/70 pointer-events-none"
+          >
+          </div>
+          <span
+            class="text-xl sm:text-2xl font-black tracking-wider text-blue-600 leading-none"
+            >FRONT</span
+          >
+          <span
+            class="text-xl sm:text-2xl font-black tracking-wider text-blue-600 leading-none mt-1"
+            >END</span
+          >
+        </div>
+
+        <!-- Satellites (Tech stack icons) -->
+        <div class="satellites-group absolute inset-0 pointer-events-none">
+          <!-- React -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="0"
+            data-tilt="-18"
+            data-rx="100"
+            data-ry="40"
+            title="React.js"
+          >
+            <div class="sat-badge bg-white border border-neutral-300 shadow-md">
+              <svg
+                class="w-5 h-5 text-[#087EA4]"
+                viewBox="-11.5 -10.23174 23 20.46348"
+                fill="none"
+              >
+                <circle cx="0" cy="0" r="2.05" fill="#087EA4"></circle>
+                <g stroke="#087EA4" stroke-width="1">
+                  <ellipse rx="11" ry="4.2"></ellipse>
+                  <ellipse rx="11" ry="4.2" transform="rotate(60)"></ellipse>
+                  <ellipse rx="11" ry="4.2" transform="rotate(120)"></ellipse>
+                </g>
+              </svg>
+            </div>
+          </div>
+
+          <!-- TypeScript -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="52"
+            data-tilt="-18"
+            data-rx="100"
+            data-ry="40"
+            title="TypeScript"
+          >
+            <div
+              class="sat-badge bg-[#3178C6] border border-[#235A97] shadow-md text-white font-bold text-xs font-mono"
+            >
+              TS
+            </div>
+          </div>
+
+          <!-- JavaScript -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="104"
+            data-tilt="-18"
+            data-rx="100"
+            data-ry="40"
+            title="JavaScript"
+          >
+            <div
+              class="sat-badge bg-[#F7DF1E] border border-[#D5BE15] shadow-md text-black font-extrabold text-xs font-mono"
+            >
+              JS
+            </div>
+          </div>
+
+          <!-- Vue.js -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="155"
+            data-tilt="22"
+            data-rx="108"
+            data-ry="44"
+            title="Vue.js"
+          >
+            <div class="sat-badge bg-white border border-neutral-300 shadow-md">
+              <svg class="w-4 h-4" viewBox="0 0 256 221" fill="none">
+                <path
+                  d="M204.8 0H256L128 220.8 0 0h97.92L128 51.2 157.44 0h47.36z"
+                  fill="#42B883"></path>
+                <path
+                  d="M0 0l128 220.8L256 0h-51.2L128 132.48 49.92 0H0z"
+                  fill="#35495E"></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- HTML5 -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="210"
+            data-tilt="22"
+            data-rx="108"
+            data-ry="44"
+            title="HTML5"
+          >
+            <div
+              class="sat-badge bg-[#E34F26] border border-[#C23C16] shadow-md text-white font-black text-[10px]"
+            >
+              HTML
+            </div>
+          </div>
+
+          <!-- CSS3 -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="265"
+            data-tilt="-18"
+            data-rx="100"
+            data-ry="40"
+            title="CSS3"
+          >
+            <div
+              class="sat-badge bg-[#1572B6] border border-[#10568B] shadow-md text-white font-black text-[10px]"
+            >
+              CSS
+            </div>
+          </div>
+
+          <!-- Tailwind CSS -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="315"
+            data-tilt="22"
+            data-rx="108"
+            data-ry="44"
+            title="Tailwind CSS"
+          >
+            <div class="sat-badge bg-white border border-neutral-300 shadow-md">
+              <svg
+                class="w-4 h-4 text-[#38BDF8]"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PLANET 1: BACK END ══════════════════════════════════════ -->
+    <div
+      class="planet-system-node absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto cursor-pointer"
+      data-index="1"
+      data-id="backend"
+    >
+      <div
+        class="planet-system-inner relative w-[260px] h-[260px] flex items-center justify-center"
+      >
+        <!-- Local Orbit rings -->
+        <svg
+          class="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
+          viewBox="-130 -130 260 260"
+        >
+          <ellipse
+            cx="0"
+            cy="0"
+            rx="100"
+            ry="40"
+            fill="none"
+            stroke="#EA580C"
+            stroke-opacity="0.38"
+            stroke-width="1.8"
+            transform="rotate(-15)"></ellipse>
+          <ellipse
+            cx="0"
+            cy="0"
+            rx="108"
+            ry="44"
+            fill="none"
+            stroke="#94A3B8"
+            stroke-opacity="0.45"
+            stroke-width="1.4"
+            stroke-dasharray="4 4"
+            transform="rotate(25)"></ellipse>
+        </svg>
+
+        <!-- Central Planet Globe -->
+        <div
+          class="planet-globe relative z-10 w-32 h-32 sm:w-36 sm:h-36 rounded-full flex flex-col items-center justify-center text-center bg-[#E55A36] border-[4px] border-[#C44322] shadow-xl select-none"
+        >
+          <div
+            class="absolute inset-1.5 rounded-full border-2 border-dashed border-white/30 pointer-events-none"
+          >
+          </div>
+          <span
+            class="text-xl sm:text-2xl font-black tracking-wider text-neutral-950 leading-none"
+            >BACK</span
+          >
+          <span
+            class="text-xl sm:text-2xl font-black tracking-wider text-neutral-950 leading-none mt-1"
+            >END</span
+          >
+        </div>
+
+        <!-- Satellites -->
+        <div class="satellites-group absolute inset-0 pointer-events-none">
+          <!-- Node.js -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="10"
+            data-tilt="-15"
+            data-rx="100"
+            data-ry="40"
+            title="Node.js"
+          >
+            <div
+              class="sat-badge bg-[#EBF8EE] border border-[#417E38] shadow-md text-[#339933] font-bold text-[10px]"
+            >
+              node
+            </div>
+          </div>
+
+          <!-- Python -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="68"
+            data-tilt="-15"
+            data-rx="100"
+            data-ry="40"
+            title="Python"
+          >
+            <div class="sat-badge bg-white border border-neutral-300 shadow-md">
+              <svg class="w-4 h-4" viewBox="0 0 110 110" fill="none">
+                <path
+                  d="M54.1 2C27.6 2 29.2 13.5 29.2 13.5l.03 12.02h25.4v3.61H19.98S2 27.2 2 54.1c0 26.9 15.6 25.9 15.6 25.9h9.33v-13.1s-.5-15.6 15.35-15.6h24.87s14.8.2 14.8-14.3V16.3S84 2 54.1 2zm-13.7 7.7a3.8 3.8 0 11.02 7.6 3.8 3.8 0 01-.02-7.6z"
+                  fill="#366A96"></path>
+                <path
+                  d="M55.9 108c26.5 0 24.9-11.5 24.9-11.5l-.03-12.02H55.37v-3.61h34.65s18 1.9 18-25c0-26.9-15.6-25.9-15.6-25.9h-9.33v13.1s.5 15.6-15.35 15.6H43.87s-14.8-.2-14.8 14.3v15.7S26 108 55.9 108zm13.7-7.7a3.8 3.8 0 11-.02-7.6 3.8 3.8 0 01.02 7.6z"
+                  fill="#FFC331"></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- PostgreSQL -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="125"
+            data-tilt="25"
+            data-rx="108"
+            data-ry="44"
+            title="PostgreSQL"
+          >
+            <div
+              class="sat-badge bg-[#EBF3FB] border border-[#336791] shadow-md"
+            >
+              <svg
+                class="w-4 h-4 text-[#336791]"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14.5c0 .83-.67 1.5-1.5 1.5S10 17.33 10 16.5v-3c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v3zm3-4c0 .83-.67 1.5-1.5 1.5S13 13.33 13 12.5v-2c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2zm-6 1c0 .83-.67 1.5-1.5 1.5S7 14.33 7 13.5v-1c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v1z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Golang -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="185"
+            data-tilt="-15"
+            data-rx="100"
+            data-ry="40"
+            title="Golang"
+          >
+            <div
+              class="sat-badge bg-[#00ADD8] border border-[#0089AB] shadow-md text-white font-extrabold text-[11px] font-mono tracking-tighter"
+            >
+              =GO
+            </div>
+          </div>
+
+          <!-- Express -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="245"
+            data-tilt="25"
+            data-rx="108"
+            data-ry="44"
+            title="Express.js"
+          >
+            <div
+              class="sat-badge bg-white border border-neutral-300 shadow-md text-neutral-800 font-bold text-[9px]"
+            >
+              Express
+            </div>
+          </div>
+
+          <!-- FastAPI -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="305"
+            data-tilt="-15"
+            data-rx="100"
+            data-ry="40"
+            title="FastAPI"
+          >
+            <div
+              class="sat-badge bg-[#E6F4EA] border border-[#059669] shadow-md"
+            >
+              <svg
+                class="w-4 h-4 text-[#059669]"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M12 2L3 13h7l-1 9 9-11h-7l1-9z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PLANET 2: DEV OPS ═══════════════════════════════════════ -->
+    <div
+      class="planet-system-node absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto cursor-pointer"
+      data-index="2"
+      data-id="devops"
+    >
+      <div
+        class="planet-system-inner relative w-[260px] h-[260px] flex items-center justify-center"
+      >
+        <!-- Local Orbit rings -->
+        <svg
+          class="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
+          viewBox="-130 -130 260 260"
+        >
+          <ellipse
+            cx="0"
+            cy="0"
+            rx="100"
+            ry="40"
+            fill="none"
+            stroke="#0284C7"
+            stroke-opacity="0.38"
+            stroke-width="1.8"
+            transform="rotate(-20)"></ellipse>
+          <ellipse
+            cx="0"
+            cy="0"
+            rx="108"
+            ry="44"
+            fill="none"
+            stroke="#94A3B8"
+            stroke-opacity="0.45"
+            stroke-width="1.4"
+            stroke-dasharray="4 4"
+            transform="rotate(20)"></ellipse>
+        </svg>
+
+        <!-- Central Planet Globe -->
+        <div
+          class="planet-globe relative z-10 w-32 h-32 sm:w-36 sm:h-36 rounded-full flex flex-col items-center justify-center text-center shadow-xl select-none"
+          style="background: linear-gradient(135deg, #7DD3FC, #86EFAC); border: 4px solid #0284C7;"
+        >
+          <div
+            class="absolute inset-1.5 rounded-full border-2 border-dashed border-white/50 pointer-events-none"
+          >
+          </div>
+          <span
+            class="text-xl sm:text-2xl font-black tracking-wider text-slate-900 leading-none"
+            >DEV</span
+          >
+          <span
+            class="text-xl sm:text-2xl font-black tracking-wider text-slate-900 leading-none mt-1"
+            >OPS</span
+          >
+        </div>
+
+        <!-- Satellites -->
+        <div class="satellites-group absolute inset-0 pointer-events-none">
+          <!-- Docker -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="15"
+            data-tilt="-20"
+            data-rx="100"
+            data-ry="40"
+            title="Docker"
+          >
+            <div
+              class="sat-badge bg-[#EBF5FB] border border-[#2496ED] shadow-md"
+            >
+              <svg
+                class="w-4 h-4 text-[#2496ED]"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.186.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.186.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.186.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.185-.186H5.136a.186.186 0 00-.186.185v1.888c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.082.185.185.185M23.76 9.89a7.64 7.64 0 00-3.66-3.158l-.348-.142-.238.293c-.477.587-1.077 1.056-1.748 1.368-.26.12-.533.21-.81.27v2.55h4.86c.64.004 1.258.26 1.716.71.077.068.175.093.228.007zM.004 11.53c-.027.674.053 1.348.24 1.996 1.045 3.498 4.246 5.86 7.9 5.86 5.973 0 10.985-3.834 12.355-9.356H.49a4.8 4.8 0 00-.486 1.5"
+                ></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Kubernetes -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="72"
+            data-tilt="20"
+            data-rx="108"
+            data-ry="44"
+            title="Kubernetes"
+          >
+            <div
+              class="sat-badge bg-[#EEF2FF] border border-[#326CE5] shadow-md"
+            >
+              <svg
+                class="w-4 h-4 text-[#326CE5]"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M12 2L3.5 7v10L12 22l8.5-5V7L12 2zm0 2.2l6.5 3.8v7.9L12 19.8l-6.5-3.9V8L12 4.2zm-1 3.8v3H8v2h3v3h2v-3h3v-2h-3V8h-2z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- GitHub -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="135"
+            data-tilt="-20"
+            data-rx="100"
+            data-ry="40"
+            title="GitHub Actions"
+          >
+            <div class="sat-badge bg-white border border-neutral-300 shadow-md">
+              <svg
+                class="w-4 h-4 text-[#24292F]"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- AWS -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="195"
+            data-tilt="20"
+            data-rx="108"
+            data-ry="44"
+            title="AWS"
+          >
+            <div
+              class="sat-badge bg-white border border-neutral-300 shadow-md text-[#FF9900] font-black text-[10px] font-mono"
+            >
+              aws
+            </div>
+          </div>
+
+          <!-- Linux -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="250"
+            data-tilt="-20"
+            data-rx="100"
+            data-ry="40"
+            title="Linux"
+          >
+            <div
+              class="sat-badge bg-[#FFFBEB] border border-[#F59E0B] shadow-md text-neutral-900 font-bold text-xs"
+            >
+              🐧
+            </div>
+          </div>
+
+          <!-- Figma -->
+          <div
+            class="orbit-sat pointer-events-auto"
+            data-angle="305"
+            data-tilt="20"
+            data-rx="108"
+            data-ry="44"
+            title="Figma Design"
+          >
+            <div class="sat-badge bg-white border border-neutral-300 shadow-md">
+              <svg class="w-3.5 h-4" viewBox="0 0 38 57" fill="none">
+                <path
+                  d="M19 28.5a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z"
+                  fill="#1ABCFE"></path>
+                <path
+                  d="M0 47.5A9.5 9.5 0 019.5 38H19v9.5a9.5 9.5 0 11-19 0z"
+                  fill="#0ACF83"></path>
+                <path d="M19 0v19h9.5a9.5 9.5 0 100-19H19z" fill="#FF7262"
+                ></path>
+                <path
+                  d="M0 9.5A9.5 9.5 0 009.5 19H19V0H9.5A9.5 9.5 0 000 9.5z"
+                  fill="#F24E1E"></path>
+                <path
+                  d="M0 28.5A9.5 9.5 0 009.5 38H19V19H9.5A9.5 9.5 0 000 28.5z"
+                  fill="#A259FF"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ══════════════════════════════════════════════════════════════
+  // HORIZONTAL INLINE PLANETARY CAROUSEL WITH 3D DEPTH
+  // ══════════════════════════════════════════════════════════════
+
+  interface SatelliteNode {
+    el: HTMLElement;
+    baseAngle: number;
+    tiltRad: number;
+    rx: number;
+    ry: number;
+  }
+
+  interface PlanetNode {
+    el: HTMLElement;
+    globe: HTMLElement;
+    index: number;
+    satellites: SatelliteNode[];
+    internalSpin: number;
+  }
+
+  const stage = document.getElementById("carousel-stage") as HTMLElement;
+  const planetElements = Array.from(
+    document.querySelectorAll<HTMLElement>(".planet-system-node"),
+  );
+  const prevBtn = document.getElementById("planet-spin-prev");
+  const nextBtn = document.getElementById("planet-spin-next");
+
+  const planets: PlanetNode[] = planetElements.map((el, i) => {
+    const globe = el.querySelector<HTMLElement>(".planet-globe")!;
+    const satEls = Array.from(el.querySelectorAll<HTMLElement>(".orbit-sat"));
+
+    const satellites: SatelliteNode[] = satEls.map((sat) => {
+      const angleDeg = parseFloat(sat.dataset.angle || "0");
+      const tiltDeg = parseFloat(sat.dataset.tilt || "0");
+      const rx = parseFloat(sat.dataset.rx || "100");
+      const ry = parseFloat(sat.dataset.ry || "40");
+
+      return {
+        el: sat,
+        baseAngle: (angleDeg * Math.PI) / 180,
+        tiltRad: (tiltDeg * Math.PI) / 180,
+        rx,
+        ry,
+      };
+    });
+
+    return {
+      el,
+      globe,
+      index: i,
+      satellites,
+      internalSpin: 0,
+    };
+  });
+
+  // ── SUDUT KOORDINAT HORIZONTAL INLINE ──
+  // Step rotasi = 120 derajat (2*PI / 3)
+  const STEP_RAD = (2 * Math.PI) / 3;
+
+  // Posisi Default:
+  // carouselAngle = 0 menempatkan Planet 0 (Front End) di tengah depan (X = 0, Z = +1).
+  // Planet 1 (Back End) di kanan (X = +0.866 * radiusX, Z = -0.5).
+  // Planet 2 (Dev Ops) di kiri (X = -0.866 * radiusX, Z = -0.5).
+  // Tiga planet berjejer lurus secara horizontal di sumbu X!
+  let currentCarouselAngle = 0;
+  let targetCarouselAngle = 0;
+
+  let isDragging = false;
+  let startPointerX = 0;
+  let lastPointerX = 0;
+  let dragVelocity = 0;
+  let lastMoveTime = performance.now();
+
+  function getCarouselDimensions() {
+    const isMobile = window.innerWidth < 640;
+    const isTablet = window.innerWidth < 1024;
+    return {
+      // Horizontal separation on X-axis
+      radiusX: isMobile ? 185 : isTablet ? 270 : 340,
+      // Very slight vertical perspective depth (keeps inline horizontal feel)
+      radiusY: isMobile ? 6 : 10,
+    };
+  }
+
+  // ── POINTER DRAG / SWIPE HORIZONTAL ──
+  stage.addEventListener("pointerdown", (e: PointerEvent) => {
+    e.preventDefault();
+    try {
+      stage.setPointerCapture(e.pointerId);
+    } catch {}
+
+    isDragging = true;
+    startPointerX = e.clientX;
+    lastPointerX = e.clientX;
+    lastMoveTime = performance.now();
+    dragVelocity = 0;
+    stage.classList.add("is-dragging");
+  });
+
+  stage.addEventListener("pointermove", (e: PointerEvent) => {
+    if (!isDragging) return;
+
+    const now = performance.now();
+    const dt = Math.max(1, now - lastMoveTime);
+    const dx = e.clientX - lastPointerX;
+
+    // Geser ke kanan (dx > 0) -> rotasi ke kanan
+    // Sensitivitas: 1px drag = ~0.0042 radians
+    const radDelta = dx * 0.0045;
+    targetCarouselAngle += radDelta;
+    currentCarouselAngle += radDelta; // Direct 1:1 feel during drag
+
+    dragVelocity = radDelta / dt;
+    lastPointerX = e.clientX;
+    lastMoveTime = now;
+  });
+
+  const stopDrag = (e: PointerEvent) => {
+    if (!isDragging) return;
+    isDragging = false;
+    try {
+      stage.releasePointerCapture(e.pointerId);
+    } catch {}
+    stage.classList.remove("is-dragging");
+
+    // Impart flick velocity & SNAP ke planet terdekat (kelipatan 120 deg)
+    const flickMomentum = dragVelocity * 180;
+    const projectedAngle = targetCarouselAngle + flickMomentum;
+    targetCarouselAngle = Math.round(projectedAngle / STEP_RAD) * STEP_RAD;
+  };
+
+  stage.addEventListener("pointerup", stopDrag);
+  stage.addEventListener("pointercancel", stopDrag);
+
+  // ── TOMBOL PUTAR KIRI / KANAN & NAVIGASI ──
+  // Putar Kiri: geser formasi 1 langkah ke kiri (+120 deg)
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      targetCarouselAngle += STEP_RAD;
+    });
+  }
+
+  // Putar Kanan: geser formasi 1 langkah ke kanan (-120 deg)
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      targetCarouselAngle -= STEP_RAD;
+    });
+  }
+
+  // Klik dot / planet untuk membawa planet tersebut ke posisi tengah depan
+  function rotateToPlanet(targetIndex: number) {
+    // Cari kelipatan STEP_RAD terdekat yang menempatkan targetIndex di depan tengah (phase % 2PI = 0)
+    // planetPhase = targetCarouselAngle + targetIndex * STEP_RAD
+    // Kita ingin planetPhase = kelipatan 2*PI, sehingga targetCarouselAngle = -targetIndex * STEP_RAD
+    const targetOffset = -targetIndex * STEP_RAD;
+    const currentRot = targetCarouselAngle;
+
+    // Temukan kelipatan putaran (2*PI * k) terdekat agar animasi tidak berputar terlalu jauh
+    const fullTurn = 2 * Math.PI;
+    const diff = (targetOffset - currentRot) % fullTurn;
+    let shortest = diff;
+    if (diff > Math.PI) shortest -= fullTurn;
+    if (diff < -Math.PI) shortest += fullTurn;
+
+    targetCarouselAngle = currentRot + shortest;
+  }
+
+  planets.forEach((p) => {
+    p.el.addEventListener("click", () => {
+      rotateToPlanet(p.index);
+    });
+  });
+
+  // ── 60FPS 3D RENDER LOOP ──
+  let prevFrameTime = performance.now();
+
+  function render(now: number) {
+    const dt = Math.min(32, now - prevFrameTime);
+    prevFrameTime = now;
+
+    // ═══ PLANET INDUK AKTIF MENGORBIT OTOMATIS ═══
+    if (!isDragging) {
+      // Mengorbit otomatis secara halus dan terus-menerus
+      targetCarouselAngle += 0.00042 * dt;
+      currentCarouselAngle +=
+        (targetCarouselAngle - currentCarouselAngle) * 0.085;
+    }
+
+    const { radiusX, radiusY } = getCarouselDimensions();
+    const totalPlanets = planets.length;
+
+    let closestPlanetIndex = 0;
+    let maxZ = -Infinity;
+
+    planets.forEach((p) => {
+      // Phase tiap planet (0, 120deg, 240deg dari sudut carousel saat ini)
+      const phase = currentCarouselAngle + p.index * STEP_RAD;
+
+      // ═══ KOORDINAT SUSUNAN HORIZONTAL INLINE ═══
+      // Sumbu X: sin(phase) memastikan saat phase=0 (planet tengah), X = 0!
+      // Samping Kanan: phase = +120deg -> X = +0.866 * radiusX
+      // Samping Kiri:  phase = -120deg -> X = -0.866 * radiusX
+      // Jarak kiri dan kanan simetris proporsional!
+      const x = radiusX * Math.sin(phase);
+
+      // Kedalaman Z: cos(phase)
+      // Tengah depan: cos(0) = +1 (terdepan, fokus utama)
+      // Samping: cos(±120deg) = -0.5
+      // Belakang: cos(180deg) = -1 (terjauh)
+      const z = Math.cos(phase);
+
+      // Sumbu Y: dijaga berjejer lurus secara horizontal di sumbu X!
+      // Hanya ada kemiringan 3D sangat halus (-radiusY * z)
+      const y = -radiusY * z;
+
+      // Normalized Depth [0 = paling belakang, 1 = paling depan tengah]
+      const normDepth = (z + 1) / 2;
+
+      // Lacak planet terdepan untuk active indicator
+      if (z > maxZ) {
+        maxZ = z;
+        closestPlanetIndex = p.index;
+      }
+
+      // ═══ 3D DYNAMIC PERSPECTIVE SCALING ═══
+      // Tengah Depan (normDepth = 1.0): Scale 1.40 (membesar lebih dominan sebagai fokus utama)
+      // Samping (normDepth = 0.25):     Scale 0.88 (proporsional mengapit di kiri dan kanan)
+      // Belakang (normDepth = 0.0):     Scale 0.58 (mengecil saat melintas di belakang)
+      const planetScale = 0.58 + Math.pow(normDepth, 1.15) * 0.82;
+
+      // Z-INDEX: Depan = 34, Samping = 16, Belakang = 4
+      const zIndex = Math.round(4 + normDepth * 30);
+
+      // OPACITY: Depan = 1.0, Samping = 0.88, Belakang = 0.55
+      const opacity = 0.55 + normDepth * 0.45;
+
+      // Drop shadow dinamis untuk efek kedalaman
+      const shadowBlur = Math.round(8 + normDepth * 28);
+      const shadowAlpha = (0.06 + normDepth * 0.22).toFixed(2);
+
+      p.el.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${planetScale})`;
+      p.el.style.zIndex = `${zIndex}`;
+      p.el.style.opacity = `${opacity}`;
+      p.el.style.filter = `drop-shadow(0 ${shadowBlur / 2}px ${shadowBlur}px rgba(0,0,0,${shadowAlpha}))`;
+
+      // Catatan: Planet globe TIDAK dirotasi agar teks tetap tegak lurus dan terbaca jelas!
+      p.globe.style.transform = "none";
+
+      // ═══ SATELLITES INDUK MENGORBIT OTOMATIS SEARAH JARUM JAM (CLOCKWISE) ═══
+      // Sudut bertambah secara kontinu searah jarum jam (clockwise)
+      p.internalSpin += 0.00085 * dt;
+
+      p.satellites.forEach((sat) => {
+        // Satelit mengorbit searah jarum jam (clockwise: sudut positif bertambah dari 0 -> pi -> 2pi)
+        const satAngle = sat.baseAngle + p.internalSpin;
+
+        const cosA = Math.cos(satAngle);
+        const sinA = Math.sin(satAngle);
+
+        const x0 = sat.rx * cosA;
+        const y0 = sat.ry * sinA;
+
+        // Tilted orbit plane
+        const sx = x0 * Math.cos(sat.tiltRad) - y0 * Math.sin(sat.tiltRad);
+        const sy = x0 * Math.sin(sat.tiltRad) + y0 * Math.cos(sat.tiltRad);
+
+        // Satelit depth scale relatif terhadap planetnya
+        const satNormZ = (sinA + 1) / 2;
+        const satScale = 0.74 + satNormZ * 0.52;
+        const satZIndex = sinA >= 0 ? 20 : 2;
+
+        sat.el.style.transform = `translate3d(${sx}px, ${sy}px, 0) scale(${satScale})`;
+        sat.el.style.zIndex = `${satZIndex}`;
+      });
+    });
+
+    requestAnimationFrame(render);
+  }
+
+  requestAnimationFrame(render);
+</script>
+
+<style>
+  /* 3D Stage container */
+  #carousel-stage {
+    perspective: 1200px;
+    will-change: transform;
+  }
+
+  #carousel-stage.is-dragging {
+    cursor: grabbing !important;
+  }
+
+  /* Planet System Node */
+  .planet-system-node {
+    will-change: transform, opacity, filter;
+    transition: filter 0.2s ease;
+  }
+
+  /* Central planet globe */
+  .planet-globe {
+    will-change: transform;
+    transition: box-shadow 0.25s ease;
+  }
+
+  /* Satellites */
+  .orbit-sat {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 36px;
+    height: 36px;
+    margin-top: -18px;
+    margin-left: -18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+    cursor: pointer;
+  }
+
+  .sat-badge {
+    width: 34px;
+    height: 34px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .orbit-sat:hover .sat-badge {
+    transform: scale(1.22);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+  }
+</style>

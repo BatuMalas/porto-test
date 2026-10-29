@@ -1,6 +1,7 @@
 ---
 // EditorialView.astro — Modern Dossier / Creative Technologist Classic View
 import { owner, projects, skills, socials, experiences } from "../data/portfolio";
+import TechPlanetaryOrbit from "./TechPlanetaryOrbit.astro";
 
 const categoryPillStyle: Record<string, { bg: string; text: string; border: string }> = {
   web:    { bg: "#EEF2FF", text: "#4F46E5", border: "#E0E7FF" },
@@ -425,52 +426,8 @@ const toolSkills     = skills.filter(s => s.category === "devops" || s.category 
         Architecture, Graphics &amp; Tooling
       </h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Frontend & Creative -->
-        <div class="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-xs">
-          <div class="flex items-center gap-2.5 text-neutral-900 font-bold text-sm mb-4">
-            <span class="p-1.5 rounded-lg bg-indigo-50 text-indigo-600">✦</span>
-            <span>Frontend &amp; Creative Code</span>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            {frontendSkills.map((s) => (
-              <span class="px-3 py-1.5 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-700 border border-neutral-200/70 hover:bg-neutral-100 transition-colors">
-                {s.name}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <!-- Backend & Infrastructure -->
-        <div class="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-xs">
-          <div class="flex items-center gap-2.5 text-neutral-900 font-bold text-sm mb-4">
-            <span class="p-1.5 rounded-lg bg-emerald-50 text-emerald-600">⚙</span>
-            <span>Backend &amp; Systems</span>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            {backendSkills.map((s) => (
-              <span class="px-3 py-1.5 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-700 border border-neutral-200/70 hover:bg-neutral-100 transition-colors">
-                {s.name}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <!-- DevOps & Design Tooling -->
-        <div class="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-xs">
-          <div class="flex items-center gap-2.5 text-neutral-900 font-bold text-sm mb-4">
-            <span class="p-1.5 rounded-lg bg-amber-50 text-amber-600">⚒</span>
-            <span>DevOps &amp; Interface Design</span>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            {toolSkills.map((s) => (
-              <span class="px-3 py-1.5 rounded-lg text-xs font-medium bg-neutral-50 text-neutral-700 border border-neutral-200/70 hover:bg-neutral-100 transition-colors">
-                {s.name}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
+      <!-- Planetary Orbit System (Inspired by retro blueprint diagram with 3D scaling satellites) -->
+      <TechPlanetaryOrbit />
     </section>
 
     <!-- ══ CONTACT / INQUIRY BANNER ══════════════════════════════════ -->

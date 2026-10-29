@@ -180,9 +180,9 @@ export const socials: Social[] = [
 
 export const experiences: Experience[] = [
   {
-    role: "Senior Software Engineer",
-    company: "TechRange Systems",
-    period: "JAN 2022 — PRESENT",
+    role: "Junior Programmer",
+    company: "PT. Datacomm Diangraha",
+    period: "SEP 2026 — PRESENT",
     current: true,
     achievements: [
       "Lead the development of a high-traffic e-commerce dashboard using Next.js and GraphQL, improving load times by 45%.",
@@ -191,12 +191,12 @@ export const experiences: Experience[] = [
     ],
   },
   {
-    role: "Frontend Developer",
-    company: "Pixel Prefect Agency",
-    period: "AUG 2019 — DEC 2021",
+    role: "Frontend Web Developer",
+    company: "PT Ordo Teknologi Karya",
+    period: "FEB 2025 — JUL 2025",
     current: false,
     achievements: [
-      "Developed over 15+ custom WordPress themes and headless CMS solutions using React.",
+      "Developed over 3+ laravel and ReactJS projects from scratch.",
       "Collaboration with designers to bridge the gap between creative vision and technical feasibility.",
       "Implemented advanced CSS animations and interactive SVG elements for award-winning marketing sites.",
     ],
@@ -205,13 +205,13 @@ export const experiences: Experience[] = [
 
 export const educations: Education[] = [
   {
-    degree: "B.Sc. In Computer Science",
-    institution: "University of Technology",
+    degree: "S.Kom. In Computer Science",
+    institution: "State University of Surabaya (UNESA)",
     description: "Focused on Software Engineering, Data Structures, and Distributed Systems. Graduated with Honors.",
   },
   {
-    degree: "Full-Stack Certification",
-    institution: "Advanced Tech Institute",
-    description: "Comprehensive training in modern web architectures, cloud deployment, and system design patterns.",
+    degree: "Mobile Developer",
+    institution: "Bangkit Academy 2025 - Google Cloud, GoTo, Traveloka",
+    description: "Comprehensive training in modern mobile development architectures.",
   },
 ];
